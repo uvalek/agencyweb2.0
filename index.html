@@ -568,6 +568,13 @@
             color: rgba(255,255,255,0.7);
             letter-spacing: 0.05em;
         }
+        /* Hide native big play button on all browsers */
+        video::-webkit-media-controls-overlay-play-button {
+            display: none !important;
+        }
+        video::-webkit-media-controls-start-playback-button {
+            display: none !important;
+        }
 
         /* ===== PHONE MOCKUP ===== */
         .phone-mockup {
@@ -879,7 +886,7 @@
         </section>
 
         <!-- ===== VIDEO DEMO ===== -->
-        <section class="pt-0 sm:pt-8 pb-12 sm:pb-20 px-4 sm:px-6 lg:px-8">
+        <section class="pt-3 sm:pt-8 pb-12 sm:pb-20 px-4 sm:px-6 lg:px-8">
             <div class="max-w-4xl mx-auto reveal">
                 <div class="video-wrapper rounded-2xl overflow-hidden shadow-[0_0_60px_rgba(124,58,237,0.1)]">
                     <video id="heroVideo" loop playsinline preload="metadata" class="w-full h-auto block">
@@ -1262,9 +1269,11 @@
         const overlay = document.getElementById('videoOverlay');
         if (!video || !overlay) return;
 
+        // Always show bottom control bar
+        video.controls = true;
+
         overlay.addEventListener('click', () => {
             video.play();
-            video.controls = true;
             overlay.classList.add('hidden');
         });
 
@@ -1276,6 +1285,19 @@
 
         video.addEventListener('play', () => {
             overlay.classList.add('hidden');
+        });
+
+        // Clicking the video itself toggles play/pause
+        video.addEventListener('click', (e) => {
+            // Don't interfere with native controls bar clicks
+            const rect = video.getBoundingClientRect();
+            const clickY = e.clientY - rect.top;
+            if (clickY > rect.height - 50) return;
+            if (video.paused) {
+                video.play();
+            } else {
+                video.pause();
+            }
         });
     })();
     </script>
