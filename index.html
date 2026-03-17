@@ -1037,31 +1037,39 @@
                     </div>
 
                     <!-- Stats (right on md+) -->
-                    <div class="grid grid-cols-2 gap-8 text-center md:text-left">
-                        <div class="reveal">
-                            <p class="stat-number" data-target="5">0</p>
-                            <p class="text-sm text-brand-muted mt-1">seg. de respuesta</p>
+                    <div>
+                        <div class="grid grid-cols-2 gap-8 text-center md:text-left">
+                            <div class="reveal">
+                                <p class="stat-number" data-target="5">0</p>
+                                <p class="text-sm text-brand-muted mt-1">seg. de respuesta</p>
+                            </div>
+                            <div class="reveal reveal-delay-1">
+                                <p class="stat-number" data-target="24">0</p>
+                                <p class="text-sm text-brand-muted mt-1">horas activo, 7 días</p>
+                            </div>
+                            <div class="reveal reveal-delay-2">
+                                <p class="stat-number" data-target="20">0</p>
+                                <p class="text-sm text-brand-muted mt-1">hrs/mes ahorradas</p>
+                            </div>
+                            <div class="reveal reveal-delay-3">
+                                <p class="stat-number" data-target="0">0</p>
+                                <p class="text-sm text-brand-muted mt-1">prospectos perdidos</p>
+                            </div>
                         </div>
-                        <div class="reveal reveal-delay-1">
-                            <p class="stat-number" data-target="24">0</p>
-                            <p class="text-sm text-brand-muted mt-1">horas activo, 7 días</p>
-                        </div>
-                        <div class="reveal reveal-delay-2">
-                            <p class="stat-number" data-target="20">0</p>
-                            <p class="text-sm text-brand-muted mt-1">hrs/mes ahorradas</p>
-                        </div>
-                        <div class="reveal reveal-delay-3">
-                            <p class="stat-number" data-target="0">0</p>
-                            <p class="text-sm text-brand-muted mt-1">prospectos perdidos</p>
+                        <!-- CTA: Desktop inside stats column -->
+                        <div class="hidden md:block mt-10 reveal">
+                            <a href="https://t.me/alekagency2bot" target="_blank" rel="noopener noreferrer"
+                               class="shiny-cta shiny-cta-white whitespace-nowrap">
+                                Mira Cómo Funciona
+                            </a>
                         </div>
                     </div>
                 </div>
-                <!-- CTA: Prueba el bot -->
-                <div class="text-center mt-10 reveal">
+                <!-- CTA: Mobile centered below -->
+                <div class="md:hidden text-center mt-10 reveal">
                     <a href="https://t.me/alekagency2bot" target="_blank" rel="noopener noreferrer"
-                       class="inline-flex items-center gap-2 px-8 py-4 bg-white text-brand-black font-heading font-semibold text-base rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105">
+                       class="shiny-cta shiny-cta-white whitespace-nowrap">
                         Mira Cómo Funciona
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                     </a>
                 </div>
             </div>
