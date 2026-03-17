@@ -59,12 +59,14 @@
             inherits: false;
         }
 
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
         body {
             font-family: 'DM Sans', sans-serif;
             background: #050505;
             color: #F0F0F5;
             overflow-x: hidden;
+            position: relative;
+            width: 100%;
         }
 
         /* ===== GRADIENT TEXT ===== */
@@ -895,7 +897,7 @@
         </div>
     </nav>
 
-    <main class="relative z-10">
+    <main class="relative z-10" style="overflow-x:clip">
 
         <!-- ===== SECTION 1: HERO ===== -->
         <section class="hero-section relative w-full">
