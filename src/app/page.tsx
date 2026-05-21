@@ -1,65 +1,545 @@
-import Image from "next/image";
+import Navbar from "@/components/Navbar";
+import VideoPlayer from "@/components/VideoPlayer";
+import RevealEffects from "@/components/RevealEffects";
+
+const CAL_LINK = "https://cal.com/alek-nava-i4gvq6/30min?overlayCalendar=true";
+const TELEGRAM_LINK = "https://t.me/alekagency2bot";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <>
+      <RevealEffects />
+      <Navbar />
+
+      <main className="relative z-10" style={{ overflowX: "clip" }}>
+        {/* ===== HERO ===== */}
+        <section className="hero-section relative w-full">
+          <div className="hero-bg" aria-hidden="true">
+            <div className="hero-blob hero-blob-1" />
+            <div className="hero-blob hero-blob-2" />
+            <div className="hero-blob hero-blob-3" />
+            <div className="hero-streak" />
+            <div className="hero-streak-2" />
+            <div className="hero-center-glow" />
+          </div>
+
+          <div className="relative z-10 flex flex-col items-center justify-center pt-28 pb-4 sm:pt-40 sm:pb-16 px-4 sm:px-6">
+            <div className="hidden sm:flex gap-3 mb-8 hero-fade-in-down justify-center flex-wrap">
+              <div className="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur-md border border-purple-400/20 rounded-full px-5 py-2.5">
+                <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
+                <span className="text-xs font-medium tracking-wide text-purple-200 uppercase">
+                  IA para Property Managers
+                </span>
+              </div>
+              <div className="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur-md border border-purple-400/20 rounded-full px-5 py-2.5">
+                <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
+                <span className="text-xs font-medium tracking-wide text-purple-200 uppercase">
+                  IA para Sector Inmobiliario
+                </span>
+              </div>
+            </div>
+
+            <div className="text-center space-y-5 sm:space-y-6 max-w-5xl mx-auto">
+              <h1 className="font-heading text-[1.75rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight hero-fade-in-up hero-delay-200 hero-text-shadow">
+                <span className="text-brand-white">
+                  Respuestas en Segundos a tus Clientes, a
+                </span>
+                <span className="gradient-text-glow block mt-1 sm:mt-2">
+                  {" "}
+                  Cualquier Hora del Día.
+                </span>
+              </h1>
+
+              <div className="max-w-3xl mx-auto hero-fade-in-up hero-delay-400">
+                <p className="text-sm sm:text-xl text-purple-100 leading-snug sm:leading-relaxed hero-text-shadow">
+                  Atiende prospectos, gestiona propiedades y cierra más operaciones
+                  con un sistema de IA que trabaja por ti{" "}
+                  <strong className="text-brand-white">las 24 horas.</strong>
+                </p>
+              </div>
+
+              <div className="sm:hidden flex justify-center gap-2 flex-wrap hero-fade-in-up hero-delay-500">
+                <div className="inline-flex items-center gap-1.5 bg-purple-500/10 backdrop-blur-md border border-purple-400/20 rounded-full px-3 py-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
+                  <span className="text-[10px] font-medium tracking-wide text-purple-200 uppercase">
+                    IA para Property Managers
+                  </span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 bg-purple-500/10 backdrop-blur-md border border-purple-400/20 rounded-full px-3 py-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
+                  <span className="text-[10px] font-medium tracking-wide text-purple-200 uppercase">
+                    IA para Sector Inmobiliario
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-1 sm:pt-4 hero-fade-in-up hero-delay-600">
+                <a
+                  href={CAL_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="shiny-cta"
+                >
+                  <span>Agenda Tu Demo Gratis</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+              </div>
+
+              <p className="hidden sm:block text-sm text-brand-muted hero-fade-in-up hero-delay-800">
+                15 min que pueden transformar tu operación inmobiliaria
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ===== VIDEO DEMO ===== */}
+        <section className="pt-3 sm:pt-8 pb-12 sm:pb-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto reveal">
+            <VideoPlayer />
+          </div>
+        </section>
+
+        {/* ===== PHONE DEMO + STATS ===== */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto">
+            <p className="text-sm font-medium tracking-widest uppercase text-purple-400 mb-10 text-center reveal">
+              Así se ve en acción
+            </p>
+
+            <div className="flex flex-col md:flex-row items-center md:items-center md:justify-center gap-12 md:gap-16 lg:gap-24">
+              <div className="reveal reveal-delay-1">
+                <div className="phone-mockup">
+                  <div className="phone-screen">
+                    <p className="text-[10px] text-brand-muted text-center mb-4 tracking-wide uppercase">
+                      AlekAgency AI · Activo 24/7
+                    </p>
+                    <div className="flex flex-col flex-1">
+                      <div className="chat-bubble chat-guest">
+                        Hola, me interesa el depa de 2 recámaras en Polanco
+                      </div>
+                      <div className="chat-bubble chat-ai">
+                        Hola Carlos! El departamento en Polanco tiene 85m², 2
+                        recámaras, 2 baños, estacionamiento y amenidades. Precio:
+                        $4.2M MXN. ¿Te agendo una visita?
+                      </div>
+                      <div className="chat-bubble chat-guest">
+                        Si, puede ser este sábado?
+                      </div>
+                      <div className="chat-bubble chat-ai">
+                        Perfecto! Te agendo el sábado a las 11:00 AM. Te envío la
+                        ubicación exacta y los documentos que necesitas si decides
+                        apartar. ¿Alguna otra duda?
+                      </div>
+                      <div className="chat-bubble chat-guest">
+                        Genial, gracias!! Super rapido
+                      </div>
+                    </div>
+                    <div className="mt-auto pt-3 border-t border-white/[0.06] flex items-center gap-2">
+                      <div className="flex-1 bg-white/[0.04] rounded-full px-3 py-2 text-[11px] text-brand-muted">
+                        Escribe un mensaje...
+                      </div>
+                      <div className="w-7 h-7 rounded-full bg-purple-600/30 flex items-center justify-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-3.5 h-3.5 text-purple-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="grid grid-cols-2 gap-8 text-center md:text-left">
+                  <div className="reveal">
+                    <p className="stat-number" data-target="5">0</p>
+                    <p className="text-sm text-brand-muted mt-1">seg. de respuesta</p>
+                  </div>
+                  <div className="reveal reveal-delay-1">
+                    <p className="stat-number" data-target="24">0</p>
+                    <p className="text-sm text-brand-muted mt-1">horas activo, 7 días</p>
+                  </div>
+                  <div className="reveal reveal-delay-2">
+                    <p className="stat-number" data-target="20">0</p>
+                    <p className="text-sm text-brand-muted mt-1">hrs/mes ahorradas</p>
+                  </div>
+                  <div className="reveal reveal-delay-3">
+                    <p className="stat-number" data-target="0">0</p>
+                    <p className="text-sm text-brand-muted mt-1">prospectos perdidos</p>
+                  </div>
+                </div>
+                <div className="hidden md:block mt-10 reveal">
+                  <a
+                    href={TELEGRAM_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shiny-cta shiny-cta-white whitespace-nowrap"
+                  >
+                    Mira Cómo Funciona
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="md:hidden text-center mt-10 reveal">
+              <a
+                href={TELEGRAM_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shiny-cta shiny-cta-white whitespace-nowrap"
+              >
+                Mira Cómo Funciona
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* ===== PAIN POINTS ===== */}
+        <section className="py-28 px-4 sm:px-6 lg:px-8 content-auto">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16 reveal">
+              <p className="text-sm font-medium tracking-widest uppercase text-purple-400 mb-4">
+                El problema
+              </p>
+              <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
+                ¿Te suena <span className="gradient-text">familiar</span> esto?
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="shader-card cursor-pointer reveal">
+                <div className="shader-card-bg shader-card-bg-1" />
+                <div className="shader-card-content">
+                  <div className="mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="shader-card-icon text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                      <polyline points="12 6 12 12 16 14" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                    </svg>
+                  </div>
+                  <h3 className="font-heading text-xl font-bold text-white mb-3">
+                    Prospectos que se enfrían
+                  </h3>
+                  <p className="text-gray-100 leading-relaxed grow">
+                    Son las <strong className="text-purple-300">10 PM</strong> y un
+                    prospecto preguntó por una propiedad. Contestas al día siguiente.{" "}
+                    <strong>Ya fue con otro agente.</strong>
+                  </p>
+                  <div className="mt-6 flex items-center text-sm font-bold text-gray-300">
+                    <span className="mr-2">Suena familiar?</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div className="shader-card cursor-pointer reveal reveal-delay-1">
+                <div className="shader-card-bg shader-card-bg-2" />
+                <div className="shader-card-content">
+                  <div className="mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="shader-card-icon text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="font-heading text-xl font-bold text-white mb-3">
+                    Preguntas repetitivas
+                  </h3>
+                  <p className="text-gray-100 leading-relaxed grow">
+                    Llevas <strong className="text-purple-300">100 veces</strong>{" "}
+                    respondiendo: &quot;¿Cuánto mide?&quot; &quot;¿Tiene
+                    estacionamiento?&quot; &quot;¿Acepta crédito?&quot; Y aún quedan{" "}
+                    <strong>20 propiedades</strong> por mostrar.
+                  </p>
+                  <div className="mt-6 flex items-center text-sm font-bold text-gray-300">
+                    <span className="mr-2">Suena familiar?</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div className="shader-card cursor-pointer reveal reveal-delay-2">
+                <div className="shader-card-bg shader-card-bg-3" />
+                <div className="shader-card-content">
+                  <div className="mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="shader-card-icon text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                  </div>
+                  <h3 className="font-heading text-xl font-bold text-white mb-3">
+                    Operaciones perdidas
+                  </h3>
+                  <p className="text-gray-100 leading-relaxed grow">
+                    Un cliente quería agendar visita a 3 propiedades. No contestaste a
+                    tiempo. La comisión{" "}
+                    <strong className="text-purple-300">se fue a tu competencia.</strong>
+                  </p>
+                  <div className="mt-6 flex items-center text-sm font-bold text-gray-300">
+                    <span className="mr-2">Suena familiar?</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p className="text-center text-brand-muted text-lg mt-14 reveal">
+              Si te identificaste con al menos uno...{" "}
+              <strong className="text-purple-400">necesitamos hablar.</strong>
+            </p>
+          </div>
+        </section>
+
+        <div className="line-divider max-w-3xl mx-auto" />
+
+        {/* ===== SOLUTION ===== */}
+        <section className="py-28 px-4 sm:px-6 lg:px-8 content-auto">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-20 reveal">
+              <p className="text-sm font-medium tracking-widest uppercase text-purple-400 mb-4">
+                La solución
+              </p>
+              <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
+                Tu Asistente con IA
+                <br />
+                <span className="gradient-text">para el Sector Inmobiliario</span>
+              </h2>
+              <p className="text-brand-muted text-lg mt-5">Así funciona:</p>
+            </div>
+
+            <div className="space-y-8">
+              <div className="glow-card-wrapper reveal">
+                <div className="glow-card-inner flex flex-col sm:flex-row gap-6 items-start cursor-pointer">
+                  <div className="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
+                      Atención Inmediata a Cada Prospecto
+                    </h3>
+                    <p className="text-brand-muted leading-relaxed text-[17px]">
+                      Tu asistente de IA responde precios, disponibilidad,
+                      características de propiedades y agenda visitas{" "}
+                      <strong className="text-brand-white">en segundos</strong>. A
+                      cualquier hora. Todos los días.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="glow-card-wrapper reveal">
+                <div className="glow-card-inner flex flex-col sm:flex-row gap-6 items-start cursor-pointer">
+                  <div className="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                      <path d="m9 16 2 2 4-4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
+                      Seguimiento en Piloto Automático
+                    </h3>
+                    <p className="text-brand-muted leading-relaxed text-[17px]">
+                      Seguimiento a prospectos, recordatorios de visitas y
+                      coordinación de citas.{" "}
+                      <strong className="text-brand-white">Todo automatizado.</strong>{" "}
+                      Tú solo cierras las operaciones.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="glow-card-wrapper reveal">
+                <div className="glow-card-inner flex flex-col sm:flex-row gap-6 items-start cursor-pointer">
+                  <div className="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="2" y1="12" x2="22" y2="12" />
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
+                      Tu Propio Portal de Propiedades
+                    </h3>
+                    <p className="text-brand-muted leading-relaxed text-[17px]">
+                      Deja de depender solo de portales externos. Construimos{" "}
+                      <strong className="text-brand-white">tu plataforma propia</strong>{" "}
+                      para captar clientes directos y posicionar tu marca.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className="line-divider max-w-3xl mx-auto" />
+
+        {/* ===== WHY US ===== */}
+        <section className="py-28 px-4 sm:px-6 lg:px-8 content-auto">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16 reveal">
+              <p className="text-sm font-medium tracking-widest uppercase text-purple-400 mb-4">
+                La diferencia
+              </p>
+              <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
+                ¿Por Qué <span className="gradient-text">AlekAgency</span>?
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="glow-card-wrapper reveal">
+                <div className="glow-card-inner text-center cursor-pointer">
+                  <div className="icon-box mx-auto mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                    </svg>
+                  </div>
+                  <h3 className="font-heading text-xl font-bold mb-3">
+                    Sistemas a Tu Medida
+                  </h3>
+                  <p className="text-brand-muted leading-relaxed">
+                    Nada de plantillas genéricas. Construimos todo alrededor de{" "}
+                    <strong className="text-brand-white">TU</strong> negocio
+                    inmobiliario.
+                  </p>
+                </div>
+              </div>
+
+              <div className="glow-card-wrapper reveal reveal-delay-1">
+                <div className="glow-card-inner text-center cursor-pointer">
+                  <div className="icon-box mx-auto mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                      <path d="m9 12 2 2 4-4" />
+                    </svg>
+                  </div>
+                  <h3 className="font-heading text-xl font-bold mb-3">
+                    Tú Descansas, Nosotros Mantenemos
+                  </h3>
+                  <p className="text-brand-muted leading-relaxed">
+                    Nos encargamos de todo lo técnico. Tú solo ves{" "}
+                    <strong className="text-brand-white">resultados</strong>.
+                  </p>
+                </div>
+              </div>
+
+              <div className="glow-card-wrapper reveal reveal-delay-2">
+                <div className="glow-card-inner text-center cursor-pointer">
+                  <div className="icon-box mx-auto mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                      <polyline points="17 6 23 6 23 12" />
+                    </svg>
+                  </div>
+                  <h3 className="font-heading text-xl font-bold mb-3">
+                    Resultados Medibles
+                  </h3>
+                  <p className="text-brand-muted leading-relaxed">
+                    Menos horas al celular. Más cierres. Más ingresos.{" "}
+                    <strong className="text-brand-white">Así de simple.</strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===== FINAL CTA ===== */}
+        <section id="agendar" className="py-28 px-4 sm:px-6 lg:px-8 cta-glow">
+          <div className="max-w-3xl mx-auto text-center relative z-10">
+            <div className="reveal">
+              <p className="text-sm font-medium tracking-widest uppercase text-purple-400 mb-6">
+                Da el primer paso
+              </p>
+
+              <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight mb-6">
+                En 15 Minutos Te Mostramos Cuántas Horas
+                <span className="gradient-text-glow"> Puedes Recuperar</span>
+              </h2>
+
+              <p className="text-brand-muted text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+                Agenda tu demo gratuita. Te mostramos en vivo cómo la IA puede
+                trabajar para tu operación inmobiliaria.
+              </p>
+
+              <a
+                href={CAL_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="gradient-btn inline-flex items-center gap-2 text-white font-semibold text-lg px-12 py-5 rounded-full cursor-pointer"
+              >
+                <span>Quiero Mi Demo Gratis</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5 relative z-10"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
+
+              <p className="text-brand-muted text-sm mt-6">
+                Sin costo · Sin letra chica
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
-    </div>
+
+      {/* ===== FOOTER ===== */}
+      <footer className="relative z-10 border-t border-white/[0.04] py-10 px-4 sm:px-6 lg:px-8 bg-brand-black/50">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-brand-muted">
+          <div className="font-heading font-bold text-base text-brand-white">
+            Alek<span className="gradient-text">Agency</span>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-center">
+            <a href="mailto:agencyalek@gmail.com" className="hover:text-purple-400 transition-colors duration-200 cursor-pointer">
+              agencyalek@gmail.com
+            </a>
+            <span className="hidden sm:inline text-white/10">·</span>
+            <a href="tel:+522461957348" className="hover:text-purple-400 transition-colors duration-200 cursor-pointer">
+              246 195 7348
+            </a>
+            <span className="hidden sm:inline text-white/10">·</span>
+            <a href="https://instagram.com/alekagency" target="_blank" rel="noopener noreferrer" className="hover:text-purple-400 transition-colors duration-200 cursor-pointer">
+              @alekagency
+            </a>
+          </div>
+
+          <p className="text-brand-muted/60">© 2026 AlekAgency</p>
+        </div>
+      </footer>
+    </>
   );
 }
