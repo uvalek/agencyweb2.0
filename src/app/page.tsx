@@ -240,11 +240,11 @@ export default function Home() {
               </h2>
             </div>
 
-            <div className="max-w-4xl mx-auto space-y-6">
-              {/* Feature 1: Dashboard */}
-              <div className="glow-card-wrapper reveal">
-                <div className="glow-card-inner flex flex-col sm:flex-row gap-6 items-start cursor-pointer">
-                  <div className="icon-box">
+            <div className="max-w-5xl mx-auto space-y-16">
+              {/* Feature 1: Dashboard — text + photo */}
+              <div className="reveal grid items-center gap-8 md:grid-cols-2 lg:gap-12">
+                <div>
+                  <div className="icon-box mb-5">
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                       <rect x="3" y="3" width="7" height="9" rx="1" />
                       <rect x="14" y="3" width="7" height="5" rx="1" />
@@ -252,51 +252,54 @@ export default function Home() {
                       <rect x="3" y="16" width="7" height="5" rx="1" />
                     </svg>
                   </div>
-                  <div>
-                    <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
-                      Dashboard de Propiedades
-                    </h3>
-                    <p className="text-brand-muted leading-relaxed text-[17px]">
-                      Administra todo tu inventario desde un panel simple e
-                      intuitivo: metros cuadrados, recámaras, baños, zona,
-                      dirección, fotos y descripción.{" "}
-                      <strong className="text-brand-white">
-                        Todo organizado en un solo lugar.
-                      </strong>
-                    </p>
+                  <h3 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
+                    Dashboard de Propiedades
+                  </h3>
+                  <p className="text-brand-muted leading-relaxed text-lg sm:text-xl">
+                    Administra todo tu inventario desde un panel simple e
+                    intuitivo: metros cuadrados, recámaras, baños, zona,
+                    dirección, fotos y descripción.{" "}
+                    <strong className="text-brand-white">
+                      Todo organizado en un solo lugar.
+                    </strong>
+                  </p>
+                </div>
+                {/* Photo placeholder */}
+                <div className="flex aspect-[4/3] items-center justify-center rounded-2xl border border-dashed border-purple-400/20 bg-white/[0.02]">
+                  <div className="flex flex-col items-center gap-2 text-brand-muted/60">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <circle cx="9" cy="9" r="2" />
+                      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                    </svg>
+                    <span className="text-sm">Imagen próximamente</span>
                   </div>
                 </div>
               </div>
 
-              {/* Feature 2: Truthful data */}
-              <div className="glow-card-wrapper reveal">
-                <div className="glow-card-inner flex flex-col sm:flex-row gap-6 items-start cursor-pointer">
-                  <div className="icon-box">
+              {/* Features 2 & 3: two columns */}
+              <div className="reveal grid gap-10 sm:grid-cols-2 sm:gap-12">
+                <div>
+                  <div className="icon-box mb-4">
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                       <ellipse cx="12" cy="5" rx="9" ry="3" />
                       <path d="M3 5v14a9 3 0 0 0 18 0V5" />
                       <path d="M3 12a9 3 0 0 0 18 0" />
                     </svg>
                   </div>
-                  <div>
-                    <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
-                      Respuestas 100% Verídicas
-                    </h3>
-                    <p className="text-brand-muted leading-relaxed text-[17px]">
-                      El chatbot se conecta directo a tu base de datos y
-                      responde siempre con información real de tus propiedades.{" "}
-                      <strong className="text-brand-white">
-                        Nunca inventa precios ni características.
-                      </strong>
-                    </p>
-                  </div>
+                  <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
+                    Respuestas 100% Verídicas
+                  </h3>
+                  <p className="text-brand-muted leading-relaxed text-[17px]">
+                    El chatbot se conecta directo a tu base de datos y responde
+                    siempre con información real de tus propiedades.{" "}
+                    <strong className="text-brand-white">
+                      Nunca inventa precios ni características.
+                    </strong>
+                  </p>
                 </div>
-              </div>
-
-              {/* Feature 3: CRM */}
-              <div className="glow-card-wrapper reveal">
-                <div className="glow-card-inner flex flex-col sm:flex-row gap-6 items-start cursor-pointer">
-                  <div className="icon-box">
+                <div>
+                  <div className="icon-box mb-4">
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                       <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                       <circle cx="9" cy="7" r="4" />
@@ -304,44 +307,37 @@ export default function Home() {
                       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                     </svg>
                   </div>
-                  <div>
-                    <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
-                      CRM Integrado
-                    </h3>
-                    <p className="text-brand-muted leading-relaxed text-[17px]">
-                      Cada prospecto que conversa con el bot se registra
-                      automáticamente en tu CRM con todos sus datos de contacto.{" "}
-                      <strong className="text-brand-white">
-                        Ningún cliente se te escapa.
-                      </strong>
-                    </p>
-                  </div>
+                  <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
+                    CRM Integrado
+                  </h3>
+                  <p className="text-brand-muted leading-relaxed text-[17px]">
+                    Cada prospecto que conversa con el bot se registra
+                    automáticamente en tu CRM con todos sus datos de contacto.{" "}
+                    <strong className="text-brand-white">
+                      Ningún cliente se te escapa.
+                    </strong>
+                  </p>
                 </div>
               </div>
 
-              {/* Feature 4: Monitoring */}
-              <div className="glow-card-wrapper reveal">
-                <div className="glow-card-inner flex flex-col sm:flex-row gap-6 items-start cursor-pointer">
-                  <div className="icon-box">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
-                      Monitoreo e Intervención Humana
-                    </h3>
-                    <p className="text-brand-muted leading-relaxed text-[17px]">
-                      Observa cada conversación en tiempo real. Cuando quieras,
-                      toma el control: apaga o enciende el bot en cualquier chat
-                      para{" "}
-                      <strong className="text-brand-white">
-                        atender tú personalmente.
-                      </strong>
-                    </p>
-                  </div>
+              {/* Feature 4: Monitoring — full width */}
+              <div className="reveal">
+                <div className="icon-box mb-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
                 </div>
+                <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
+                  Monitoreo e Intervención Humana
+                </h3>
+                <p className="text-brand-muted leading-relaxed text-[17px] max-w-3xl">
+                  Observa cada conversación en tiempo real. Cuando quieras, toma
+                  el control: apaga o enciende el bot en cualquier chat para{" "}
+                  <strong className="text-brand-white">
+                    atender tú personalmente.
+                  </strong>
+                </p>
               </div>
             </div>
 
