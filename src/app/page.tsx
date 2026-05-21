@@ -232,7 +232,7 @@ export default function Home() {
         </section>
 
         {/* ===== PLATFORM ===== */}
-        <section id="plataforma" className="py-28 px-4 sm:px-6 lg:px-8 content-auto">
+        <section id="plataforma" className="py-28 px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16 reveal">
               <h2 className="font-heading text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.1]">
@@ -243,8 +243,8 @@ export default function Home() {
 
             <div className="max-w-5xl mx-auto space-y-16">
               {/* Feature 1: Dashboard — text + photo */}
-              <div className="reveal grid items-center gap-8 md:grid-cols-2 lg:gap-12">
-                <div>
+              <div className="grid items-center gap-8 md:grid-cols-2 lg:gap-12">
+                <div className="reveal">
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-14 h-14 text-purple-400 mb-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                     <rect x="3" y="3" width="7" height="9" rx="1" />
                     <rect x="14" y="3" width="7" height="5" rx="1" />
@@ -264,7 +264,7 @@ export default function Home() {
                   </p>
                 </div>
                 {/* Dashboard screenshot */}
-                <div className="overflow-hidden rounded-2xl border border-purple-400/15 bg-white/[0.02] shadow-[0_0_50px_rgba(124,58,237,0.12)]">
+                <div className="reveal reveal-delay-2 overflow-hidden rounded-2xl border border-purple-400/15 bg-white/[0.02] shadow-[0_0_50px_rgba(124,58,237,0.12)]">
                   <Image
                     src="/dashboard.png"
                     alt="Dashboard de gestión de propiedades de AlekAgency"
