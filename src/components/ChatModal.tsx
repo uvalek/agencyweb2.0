@@ -12,41 +12,68 @@ import {
 type Role = "user" | "bot";
 type Message = { id: number; role: Role; text: string };
 
-// Detecta URLs de imagen dentro del texto del bot para mostrarlas como foto
-// en vez de como link plano. El grupo de captura hace que String.split deje
-// las URLs intercaladas en el array resultante.
-const IMG_URL_SPLIT =
-  /(https?:\/\/\S+?\.(?:jpe?g|png|webp|gif)(?:\?\S*)?)/gi;
-const IMG_URL_TEST = /^https?:\/\/\S+?\.(?:jpe?g|png|webp|gif)(?:\?\S*)?$/i;
+// El bot manda las fotos en Markdown:
+//   ![Foto principal](url)  -> imagen
+//   [Recámara](url)         -> enlace azul
+// y a veces URLs de imagen sueltas. Tokenizamos el texto para renderizar
+// cada tipo. El grupo de captura hace que String.split deje los tokens
+// intercalados en el array resultante.
+const TOKEN_SPLIT =
+  /(!\[[^\]]*\]\(https?:\/\/[^\s)]+\)|\[[^\]]*\]\(https?:\/\/[^\s)]+\)|https?:\/\/\S+?\.(?:jpe?g|png|webp|gif)(?:\?\S*)?)/gi;
+const MD_IMAGE = /^!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)$/;
+const MD_LINK = /^\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)$/;
+const BARE_IMG = /^https?:\/\/\S+?\.(?:jpe?g|png|webp|gif)(?:\?\S*)?$/i;
 
-// Renderiza un mensaje: los tramos de texto como texto y las URLs de imagen
-// como <img> (con link para abrir la foto a tamaño completo).
+function Photo({ url, alt }: { url: string; alt: string }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="mt-1.5 block overflow-hidden rounded-xl border border-white/[0.08]"
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={url}
+        alt={alt || "Foto de propiedad"}
+        loading="lazy"
+        className="max-h-56 w-full object-cover"
+      />
+    </a>
+  );
+}
+
+// Renderiza un mensaje: texto plano, imágenes como <img> y enlaces como
+// palabra azul clickeable.
 function MessageContent({ text }: { text: string }) {
-  const parts = text.split(IMG_URL_SPLIT);
+  const parts = text.split(TOKEN_SPLIT);
   return (
     <>
       {parts.map((part, i) => {
         if (!part) return null;
-        if (IMG_URL_TEST.test(part.trim())) {
-          const url = part.trim();
+        const token = part.trim();
+
+        const img = token.match(MD_IMAGE);
+        if (img) return <Photo key={i} url={img[2]} alt={img[1]} />;
+
+        if (BARE_IMG.test(token))
+          return <Photo key={i} url={token} alt="Foto de propiedad" />;
+
+        const link = token.match(MD_LINK);
+        if (link) {
           return (
             <a
               key={i}
-              href={url}
+              href={link[2]}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1.5 block overflow-hidden rounded-xl border border-white/[0.08]"
+              className="text-purple-300 underline underline-offset-2 hover:text-purple-200"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={url}
-                alt="Foto de propiedad"
-                loading="lazy"
-                className="max-h-56 w-full object-cover"
-              />
+              {link[1] || "Ver foto"}
             </a>
           );
         }
+
         return (
           <span key={i} className="whitespace-pre-wrap">
             {part}
@@ -65,8 +92,13 @@ const CHATBOT_URL =
 
 const CHAT_ID_KEY = "alek_webchat_id";
 
-const GREETING =
-  "¡Hola! 👋 Soy el asistente con IA de AlekAgency. Puedo ayudarte con dudas sobre propiedades, precios, disponibilidad y agendar una visita. ¿En qué te puedo ayudar?";
+// Mensajes de bienvenida. Dejan claro que es una DEMO del producto que
+// vende AlekAgency: el bot simula ser la inmobiliaria ficticia "Luce
+// Real Estate" para que el prospecto vea cómo funcionaría en su negocio.
+const GREETING: string[] = [
+  "¡Hola! 👋 Soy un asistente con IA de demostración, creado por AlekAgency.",
+  "En este demo simulo ser el chatbot de Luce Real Estate, una inmobiliaria de ejemplo. Pregúntame por propiedades, precios o agenda una visita y verás cómo respondería un bot como este en tu propio negocio. ¿Qué te gustaría probar?",
+];
 
 // Genera o recupera un id estable por visitante para mantener el hilo.
 function getChatId(): string {
@@ -91,9 +123,9 @@ export default function ChatModal({
   onClose: () => void;
 }) {
   const [value, setValue] = useState("");
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 0, role: "bot", text: GREETING },
-  ]);
+  const [messages, setMessages] = useState<Message[]>(
+    GREETING.map((text, i) => ({ id: i, role: "bot" as Role, text }))
+  );
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatIdRef = useRef<string>("");
@@ -253,7 +285,7 @@ export default function ChatModal({
             </PromptInputActions>
           </PromptInput>
           <p className="mt-2 text-center text-[10px] text-brand-muted/70">
-            Asistente con IA de AlekAgency · puede cometer errores.
+            Demo de chatbot con IA por AlekAgency · puede cometer errores.
           </p>
         </div>
       </div>
