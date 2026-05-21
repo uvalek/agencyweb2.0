@@ -195,7 +195,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="hidden md:block mt-10 reveal">
-                  <OpenChatButton className="shiny-cta shiny-cta-white whitespace-nowrap">
+                  <OpenChatButton className="shiny-cta shiny-cta-white w-full justify-center whitespace-nowrap">
                     Mira Cómo Funciona
                   </OpenChatButton>
                 </div>
@@ -231,8 +231,8 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="md:hidden text-center mt-10 reveal">
-              <OpenChatButton className="shiny-cta shiny-cta-white whitespace-nowrap">
+            <div className="md:hidden mt-10 reveal">
+              <OpenChatButton className="shiny-cta shiny-cta-white w-full justify-center whitespace-nowrap">
                 Mira Cómo Funciona
               </OpenChatButton>
             </div>
