@@ -168,22 +168,30 @@ export default function Home() {
               </div>
 
               <div>
-                <div className="grid grid-cols-2 gap-8 text-center md:text-left">
+                <div className="grid grid-cols-2 gap-x-12 gap-y-10 sm:gap-x-20 sm:gap-y-14 text-center md:text-left">
                   <div className="reveal">
                     <p className="stat-number" data-target="5">0</p>
-                    <p className="text-sm text-brand-muted mt-1">seg. de respuesta</p>
+                    <p className="text-base sm:text-lg font-medium text-brand-white/85 mt-2">
+                      seg. de respuesta
+                    </p>
                   </div>
                   <div className="reveal reveal-delay-1">
                     <p className="stat-number" data-target="24">0</p>
-                    <p className="text-sm text-brand-muted mt-1">horas activo, 7 días</p>
+                    <p className="text-base sm:text-lg font-medium text-brand-white/85 mt-2">
+                      horas activo, 7 días
+                    </p>
                   </div>
                   <div className="reveal reveal-delay-2">
                     <p className="stat-number" data-target="20">0</p>
-                    <p className="text-sm text-brand-muted mt-1">hrs/mes ahorradas</p>
+                    <p className="text-base sm:text-lg font-medium text-brand-white/85 mt-2">
+                      hrs/mes ahorradas
+                    </p>
                   </div>
                   <div className="reveal reveal-delay-3">
                     <p className="stat-number" data-target="0">0</p>
-                    <p className="text-sm text-brand-muted mt-1">prospectos perdidos</p>
+                    <p className="text-base sm:text-lg font-medium text-brand-white/85 mt-2">
+                      prospectos perdidos
+                    </p>
                   </div>
                 </div>
                 <div className="hidden md:block mt-10 reveal">
