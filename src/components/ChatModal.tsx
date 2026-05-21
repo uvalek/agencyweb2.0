@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUp, Sparkles, X } from "lucide-react";
 import {
   PromptInput,
@@ -8,6 +8,8 @@ import {
   PromptInputActions,
   PromptInputTextarea,
 } from "@/components/ui/prompt-input";
+
+type Message = { id: number; text: string };
 
 export default function ChatModal({
   open,
@@ -17,6 +19,8 @@ export default function ChatModal({
   onClose: () => void;
 }) {
   const [value, setValue] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -26,6 +30,17 @@ export default function ChatModal({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const sendMessage = () => {
+    const text = value.trim();
+    if (!text) return;
+    setMessages((prev) => [...prev, { id: Date.now(), text }]);
+    setValue("");
+  };
 
   if (!open) return null;
 
@@ -45,19 +60,7 @@ export default function ChatModal({
       {/* Panel */}
       <div className="chat-panel-in relative m-3 flex h-[min(560px,calc(100dvh-1.5rem))] w-[calc(100vw-1.5rem)] max-w-[400px] flex-col overflow-hidden rounded-2xl border border-purple-400/20 bg-[#0A0A0F] shadow-[0_0_60px_rgba(124,58,237,0.25),0_20px_60px_rgba(0,0,0,0.6)] sm:m-6">
         {/* Header */}
-        <div className="flex items-center gap-3 border-b border-white/[0.06] bg-white/[0.02] px-4 py-3.5">
-          <div className="icon-box !h-10 !w-10 !rounded-xl">
-            <Sparkles className="h-5 w-5 text-purple-300" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="font-heading text-sm font-bold text-brand-white">
-              AlekAgency AI
-            </p>
-            <p className="flex items-center gap-1.5 text-[11px] text-brand-muted">
-              <span className="h-1.5 w-1.5 rounded-full bg-purple-500" />
-              Asistente virtual
-            </p>
-          </div>
+        <div className="flex items-center justify-end border-b border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
           <button
             onClick={onClose}
             aria-label="Cerrar chat"
@@ -90,11 +93,23 @@ export default function ChatModal({
             </div>
           </div>
 
-          <div className="mt-auto flex justify-center pt-2">
-            <span className="rounded-full border border-purple-400/20 bg-purple-500/10 px-3 py-1 text-[10px] font-medium uppercase tracking-wide text-purple-200">
-              Próximamente · Chat con IA
-            </span>
-          </div>
+          {messages.length === 0 && (
+            <div className="mt-auto flex justify-center pt-2">
+              <span className="rounded-full border border-purple-400/20 bg-purple-500/10 px-3 py-1 text-[10px] font-medium uppercase tracking-wide text-purple-200">
+                Próximamente · Chat con IA
+              </span>
+            </div>
+          )}
+
+          {messages.map((msg) => (
+            <div key={msg.id} className="flex justify-end">
+              <div className="max-w-[80%] rounded-2xl rounded-br-md bg-gradient-to-br from-purple-600 to-purple-500 px-3.5 py-2.5 text-[13px] leading-relaxed text-white">
+                {msg.text}
+              </div>
+            </div>
+          ))}
+
+          <div ref={messagesEndRef} />
         </div>
 
         {/* Input */}
@@ -102,7 +117,7 @@ export default function ChatModal({
           <PromptInput
             value={value}
             onValueChange={setValue}
-            onSubmit={() => setValue("")}
+            onSubmit={sendMessage}
             className="border-white/[0.08] bg-[#111114]"
           >
             <PromptInputTextarea
@@ -112,7 +127,7 @@ export default function ChatModal({
             <PromptInputActions className="justify-end pt-1">
               <PromptInputAction tooltip="Enviar mensaje">
                 <button
-                  onClick={() => setValue("")}
+                  onClick={sendMessage}
                   aria-label="Enviar mensaje"
                   disabled={!value.trim()}
                   className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-purple-400 text-white transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
