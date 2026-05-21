@@ -234,132 +234,113 @@ export default function Home() {
         <section id="plataforma" className="py-28 px-4 sm:px-6 lg:px-8 content-auto">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16 reveal">
-              <p className="text-sm font-medium tracking-widest uppercase text-purple-400 mb-4">
-                Más que un chatbot
-              </p>
-              <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
+              <h2 className="font-heading text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.1]">
                 Una Plataforma Completa para{" "}
                 <span className="gradient-text">Controlar tu Operación</span>
               </h2>
-              <p className="text-brand-muted text-lg mt-5 max-w-2xl mx-auto leading-relaxed">
-                El chatbot es solo lo que ve tu cliente. Detrás trabaja un
-                sistema completo que tú controlas de principio a fin.
-              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="max-w-4xl mx-auto space-y-6">
               {/* Feature 1: Dashboard */}
               <div className="glow-card-wrapper reveal">
-                <div className="glow-card-inner cursor-pointer">
-                  <div className="flex items-start justify-between mb-5">
-                    <div className="icon-box">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                        <rect x="3" y="3" width="7" height="9" rx="1" />
-                        <rect x="14" y="3" width="7" height="5" rx="1" />
-                        <rect x="14" y="12" width="7" height="9" rx="1" />
-                        <rect x="3" y="16" width="7" height="5" rx="1" />
-                      </svg>
-                    </div>
-                    <span className="font-heading text-3xl font-bold text-white/[0.07] leading-none">
-                      01
-                    </span>
+                <div className="glow-card-inner flex flex-col sm:flex-row gap-6 items-start cursor-pointer">
+                  <div className="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <rect x="3" y="3" width="7" height="9" rx="1" />
+                      <rect x="14" y="3" width="7" height="5" rx="1" />
+                      <rect x="14" y="12" width="7" height="9" rx="1" />
+                      <rect x="3" y="16" width="7" height="5" rx="1" />
+                    </svg>
                   </div>
-                  <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
-                    Dashboard de Propiedades
-                  </h3>
-                  <p className="text-brand-muted leading-relaxed text-[15px]">
-                    Administra todo tu inventario desde un panel simple e
-                    intuitivo: metros cuadrados, recámaras, baños, zona,
-                    dirección, fotos y descripción.{" "}
-                    <strong className="text-brand-white">
-                      Todo organizado en un solo lugar.
-                    </strong>
-                  </p>
+                  <div>
+                    <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
+                      Dashboard de Propiedades
+                    </h3>
+                    <p className="text-brand-muted leading-relaxed text-[17px]">
+                      Administra todo tu inventario desde un panel simple e
+                      intuitivo: metros cuadrados, recámaras, baños, zona,
+                      dirección, fotos y descripción.{" "}
+                      <strong className="text-brand-white">
+                        Todo organizado en un solo lugar.
+                      </strong>
+                    </p>
+                  </div>
                 </div>
               </div>
 
               {/* Feature 2: Truthful data */}
-              <div className="glow-card-wrapper reveal reveal-delay-1">
-                <div className="glow-card-inner cursor-pointer">
-                  <div className="flex items-start justify-between mb-5">
-                    <div className="icon-box">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                        <ellipse cx="12" cy="5" rx="9" ry="3" />
-                        <path d="M3 5v14a9 3 0 0 0 18 0V5" />
-                        <path d="M3 12a9 3 0 0 0 18 0" />
-                      </svg>
-                    </div>
-                    <span className="font-heading text-3xl font-bold text-white/[0.07] leading-none">
-                      02
-                    </span>
+              <div className="glow-card-wrapper reveal">
+                <div className="glow-card-inner flex flex-col sm:flex-row gap-6 items-start cursor-pointer">
+                  <div className="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <ellipse cx="12" cy="5" rx="9" ry="3" />
+                      <path d="M3 5v14a9 3 0 0 0 18 0V5" />
+                      <path d="M3 12a9 3 0 0 0 18 0" />
+                    </svg>
                   </div>
-                  <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
-                    Respuestas 100% Verídicas
-                  </h3>
-                  <p className="text-brand-muted leading-relaxed text-[15px]">
-                    El chatbot se conecta directo a tu base de datos y responde
-                    siempre con información real de tus propiedades.{" "}
-                    <strong className="text-brand-white">
-                      Nunca inventa precios ni características.
-                    </strong>
-                  </p>
+                  <div>
+                    <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
+                      Respuestas 100% Verídicas
+                    </h3>
+                    <p className="text-brand-muted leading-relaxed text-[17px]">
+                      El chatbot se conecta directo a tu base de datos y
+                      responde siempre con información real de tus propiedades.{" "}
+                      <strong className="text-brand-white">
+                        Nunca inventa precios ni características.
+                      </strong>
+                    </p>
+                  </div>
                 </div>
               </div>
 
               {/* Feature 3: CRM */}
               <div className="glow-card-wrapper reveal">
-                <div className="glow-card-inner cursor-pointer">
-                  <div className="flex items-start justify-between mb-5">
-                    <div className="icon-box">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                      </svg>
-                    </div>
-                    <span className="font-heading text-3xl font-bold text-white/[0.07] leading-none">
-                      03
-                    </span>
+                <div className="glow-card-inner flex flex-col sm:flex-row gap-6 items-start cursor-pointer">
+                  <div className="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
                   </div>
-                  <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
-                    CRM Integrado
-                  </h3>
-                  <p className="text-brand-muted leading-relaxed text-[15px]">
-                    Cada prospecto que conversa con el bot se registra
-                    automáticamente en tu CRM con todos sus datos de contacto.{" "}
-                    <strong className="text-brand-white">
-                      Ningún cliente se te escapa.
-                    </strong>
-                  </p>
+                  <div>
+                    <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
+                      CRM Integrado
+                    </h3>
+                    <p className="text-brand-muted leading-relaxed text-[17px]">
+                      Cada prospecto que conversa con el bot se registra
+                      automáticamente en tu CRM con todos sus datos de contacto.{" "}
+                      <strong className="text-brand-white">
+                        Ningún cliente se te escapa.
+                      </strong>
+                    </p>
+                  </div>
                 </div>
               </div>
 
               {/* Feature 4: Monitoring */}
-              <div className="glow-card-wrapper reveal reveal-delay-1">
-                <div className="glow-card-inner cursor-pointer">
-                  <div className="flex items-start justify-between mb-5">
-                    <div className="icon-box">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
-                        <circle cx="12" cy="12" r="3" />
-                      </svg>
-                    </div>
-                    <span className="font-heading text-3xl font-bold text-white/[0.07] leading-none">
-                      04
-                    </span>
+              <div className="glow-card-wrapper reveal">
+                <div className="glow-card-inner flex flex-col sm:flex-row gap-6 items-start cursor-pointer">
+                  <div className="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
                   </div>
-                  <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
-                    Monitoreo e Intervención Humana
-                  </h3>
-                  <p className="text-brand-muted leading-relaxed text-[15px]">
-                    Observa cada conversación en tiempo real. Cuando quieras,
-                    toma el control: apaga o enciende el bot en cualquier chat
-                    para{" "}
-                    <strong className="text-brand-white">
-                      atender tú personalmente.
-                    </strong>
-                  </p>
+                  <div>
+                    <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
+                      Monitoreo e Intervención Humana
+                    </h3>
+                    <p className="text-brand-muted leading-relaxed text-[17px]">
+                      Observa cada conversación en tiempo real. Cuando quieras,
+                      toma el control: apaga o enciende el bot en cualquier chat
+                      para{" "}
+                      <strong className="text-brand-white">
+                        atender tú personalmente.
+                      </strong>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
