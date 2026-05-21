@@ -12,6 +12,51 @@ import {
 type Role = "user" | "bot";
 type Message = { id: number; role: Role; text: string };
 
+// Detecta URLs de imagen dentro del texto del bot para mostrarlas como foto
+// en vez de como link plano. El grupo de captura hace que String.split deje
+// las URLs intercaladas en el array resultante.
+const IMG_URL_SPLIT =
+  /(https?:\/\/\S+?\.(?:jpe?g|png|webp|gif)(?:\?\S*)?)/gi;
+const IMG_URL_TEST = /^https?:\/\/\S+?\.(?:jpe?g|png|webp|gif)(?:\?\S*)?$/i;
+
+// Renderiza un mensaje: los tramos de texto como texto y las URLs de imagen
+// como <img> (con link para abrir la foto a tamaño completo).
+function MessageContent({ text }: { text: string }) {
+  const parts = text.split(IMG_URL_SPLIT);
+  return (
+    <>
+      {parts.map((part, i) => {
+        if (!part) return null;
+        if (IMG_URL_TEST.test(part.trim())) {
+          const url = part.trim();
+          return (
+            <a
+              key={i}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1.5 block overflow-hidden rounded-xl border border-white/[0.08]"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={url}
+                alt="Foto de propiedad"
+                loading="lazy"
+                className="max-h-56 w-full object-cover"
+              />
+            </a>
+          );
+        }
+        return (
+          <span key={i} className="whitespace-pre-wrap">
+            {part}
+          </span>
+        );
+      })}
+    </>
+  );
+}
+
 // URL del backend del chatbot (EasyPanel). Se puede sobreescribir con la
 // variable de entorno NEXT_PUBLIC_CHATBOT_URL en Vercel.
 const CHATBOT_URL =
@@ -153,8 +198,8 @@ export default function ChatModal({
                 <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-600/40 to-purple-400/10">
                   <Sparkles className="h-3.5 w-3.5 text-purple-300" />
                 </div>
-                <div className="max-w-[80%] whitespace-pre-wrap rounded-2xl rounded-bl-md bg-[#1C1C22] px-3.5 py-2.5 text-[13px] leading-relaxed text-[#d4d4d8]">
-                  {msg.text}
+                <div className="flex max-w-[80%] flex-col rounded-2xl rounded-bl-md bg-[#1C1C22] px-3.5 py-2.5 text-[13px] leading-relaxed text-[#d4d4d8]">
+                  <MessageContent text={msg.text} />
                 </div>
               </div>
             ) : (
