@@ -93,7 +93,7 @@ const CHATBOT_URL =
 const CHAT_ID_KEY = "alek_webchat_id";
 
 const GREETING =
-  "¡Hola! 👋 Soy el asistente con IA de AlekAgency. Puedo ayudarte con dudas sobre propiedades, precios, disponibilidad y agendar una visita. ¿En qué te puedo ayudar?";
+  "¡Hola! 👋 Soy el asistente con IA de Luce Real Estate. Puedo ayudarte con dudas sobre propiedades, precios, disponibilidad y agendar una visita. ¿En qué te puedo ayudar?";
 
 // Genera o recupera un id estable por visitante para mantener el hilo.
 function getChatId(): string {
@@ -280,7 +280,7 @@ export default function ChatModal({
             </PromptInputActions>
           </PromptInput>
           <p className="mt-2 text-center text-[10px] text-brand-muted/70">
-            Asistente con IA de AlekAgency · puede cometer errores.
+            Asistente con IA de Luce Real Estate · puede cometer errores.
           </p>
         </div>
       </div>
