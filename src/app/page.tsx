@@ -190,6 +190,35 @@ export default function Home() {
                     Mira Cómo Funciona
                   </OpenChatButton>
                 </div>
+
+                {/* Social channels */}
+                <div className="mt-8 reveal">
+                  <p className="mb-3 text-sm text-brand-muted text-center md:text-left">
+                    Tu chatbot también atiende en{" "}
+                    <strong className="text-brand-white">
+                      WhatsApp, Messenger e Instagram
+                    </strong>
+                  </p>
+                  <div className="flex items-center justify-center gap-6 rounded-2xl border border-purple-400/15 bg-white/[0.03] px-6 py-4 md:justify-start">
+                    {/* eslint-disable @next/next/no-img-element */}
+                    <img
+                      src="/whatsapp-icon.svg"
+                      alt="WhatsApp"
+                      className="h-10 w-10 transition-transform duration-200 hover:scale-110"
+                    />
+                    <img
+                      src="/messenger.svg"
+                      alt="Messenger"
+                      className="h-10 w-10 transition-transform duration-200 hover:scale-110"
+                    />
+                    <img
+                      src="/instagram-icon.svg"
+                      alt="Instagram"
+                      className="h-10 w-10 transition-transform duration-200 hover:scale-110"
+                    />
+                    {/* eslint-enable @next/next/no-img-element */}
+                  </div>
+                </div>
               </div>
             </div>
 
