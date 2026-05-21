@@ -12,41 +12,68 @@ import {
 type Role = "user" | "bot";
 type Message = { id: number; role: Role; text: string };
 
-// Detecta URLs de imagen dentro del texto del bot para mostrarlas como foto
-// en vez de como link plano. El grupo de captura hace que String.split deje
-// las URLs intercaladas en el array resultante.
-const IMG_URL_SPLIT =
-  /(https?:\/\/\S+?\.(?:jpe?g|png|webp|gif)(?:\?\S*)?)/gi;
-const IMG_URL_TEST = /^https?:\/\/\S+?\.(?:jpe?g|png|webp|gif)(?:\?\S*)?$/i;
+// El bot manda las fotos en Markdown:
+//   ![Foto principal](url)  -> imagen
+//   [Recámara](url)         -> enlace azul
+// y a veces URLs de imagen sueltas. Tokenizamos el texto para renderizar
+// cada tipo. El grupo de captura hace que String.split deje los tokens
+// intercalados en el array resultante.
+const TOKEN_SPLIT =
+  /(!\[[^\]]*\]\(https?:\/\/[^\s)]+\)|\[[^\]]*\]\(https?:\/\/[^\s)]+\)|https?:\/\/\S+?\.(?:jpe?g|png|webp|gif)(?:\?\S*)?)/gi;
+const MD_IMAGE = /^!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)$/;
+const MD_LINK = /^\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)$/;
+const BARE_IMG = /^https?:\/\/\S+?\.(?:jpe?g|png|webp|gif)(?:\?\S*)?$/i;
 
-// Renderiza un mensaje: los tramos de texto como texto y las URLs de imagen
-// como <img> (con link para abrir la foto a tamaño completo).
+function Photo({ url, alt }: { url: string; alt: string }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="mt-1.5 block overflow-hidden rounded-xl border border-white/[0.08]"
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={url}
+        alt={alt || "Foto de propiedad"}
+        loading="lazy"
+        className="max-h-56 w-full object-cover"
+      />
+    </a>
+  );
+}
+
+// Renderiza un mensaje: texto plano, imágenes como <img> y enlaces como
+// palabra azul clickeable.
 function MessageContent({ text }: { text: string }) {
-  const parts = text.split(IMG_URL_SPLIT);
+  const parts = text.split(TOKEN_SPLIT);
   return (
     <>
       {parts.map((part, i) => {
         if (!part) return null;
-        if (IMG_URL_TEST.test(part.trim())) {
-          const url = part.trim();
+        const token = part.trim();
+
+        const img = token.match(MD_IMAGE);
+        if (img) return <Photo key={i} url={img[2]} alt={img[1]} />;
+
+        if (BARE_IMG.test(token))
+          return <Photo key={i} url={token} alt="Foto de propiedad" />;
+
+        const link = token.match(MD_LINK);
+        if (link) {
           return (
             <a
               key={i}
-              href={url}
+              href={link[2]}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1.5 block overflow-hidden rounded-xl border border-white/[0.08]"
+              className="text-purple-300 underline underline-offset-2 hover:text-purple-200"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={url}
-                alt="Foto de propiedad"
-                loading="lazy"
-                className="max-h-56 w-full object-cover"
-              />
+              {link[1] || "Ver foto"}
             </a>
           );
         }
+
         return (
           <span key={i} className="whitespace-pre-wrap">
             {part}
