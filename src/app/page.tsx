@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import VideoPlayer from "@/components/VideoPlayer";
 import RevealEffects from "@/components/RevealEffects";
@@ -264,16 +265,15 @@ export default function Home() {
                     </strong>
                   </p>
                 </div>
-                {/* Photo placeholder */}
-                <div className="flex aspect-[4/3] items-center justify-center rounded-2xl border border-dashed border-purple-400/20 bg-white/[0.02]">
-                  <div className="flex flex-col items-center gap-2 text-brand-muted/60">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                      <circle cx="9" cy="9" r="2" />
-                      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-                    </svg>
-                    <span className="text-sm">Imagen próximamente</span>
-                  </div>
+                {/* Dashboard screenshot */}
+                <div className="overflow-hidden rounded-2xl border border-purple-400/15 bg-white/[0.02] shadow-[0_0_50px_rgba(124,58,237,0.12)]">
+                  <Image
+                    src="/dashboard.png"
+                    alt="Dashboard de gestión de propiedades de AlekAgency"
+                    width={1547}
+                    height={1080}
+                    className="h-auto w-full"
+                  />
                 </div>
               </div>
 
