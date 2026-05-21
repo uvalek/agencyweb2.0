@@ -447,165 +447,6 @@ export default function Home() {
 
         <div className="line-divider max-w-3xl mx-auto" />
 
-        {/* ===== SOLUTION ===== */}
-        <section className="py-28 px-4 sm:px-6 lg:px-8 content-auto">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-20 reveal">
-              <p className="text-sm font-medium tracking-widest uppercase text-purple-400 mb-4">
-                La solución
-              </p>
-              <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
-                Tu Asistente con IA
-                <br />
-                <span className="gradient-text">para el Sector Inmobiliario</span>
-              </h2>
-              <p className="text-brand-muted text-lg mt-5">Así funciona:</p>
-            </div>
-
-            <div className="space-y-8">
-              <div className="glow-card-wrapper reveal">
-                <div className="glow-card-inner flex flex-col sm:flex-row gap-6 items-start cursor-pointer">
-                  <div className="icon-box">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
-                      Atención Inmediata a Cada Prospecto
-                    </h3>
-                    <p className="text-brand-muted leading-relaxed text-[17px]">
-                      Tu asistente de IA responde precios, disponibilidad,
-                      características de propiedades y agenda visitas{" "}
-                      <strong className="text-brand-white">en segundos</strong>. A
-                      cualquier hora. Todos los días.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="glow-card-wrapper reveal">
-                <div className="glow-card-inner flex flex-col sm:flex-row gap-6 items-start cursor-pointer">
-                  <div className="icon-box">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                      <line x1="16" y1="2" x2="16" y2="6" />
-                      <line x1="8" y1="2" x2="8" y2="6" />
-                      <line x1="3" y1="10" x2="21" y2="10" />
-                      <path d="m9 16 2 2 4-4" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
-                      Seguimiento en Piloto Automático
-                    </h3>
-                    <p className="text-brand-muted leading-relaxed text-[17px]">
-                      Seguimiento a prospectos, recordatorios de visitas y
-                      coordinación de citas.{" "}
-                      <strong className="text-brand-white">Todo automatizado.</strong>{" "}
-                      Tú solo cierras las operaciones.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="glow-card-wrapper reveal">
-                <div className="glow-card-inner flex flex-col sm:flex-row gap-6 items-start cursor-pointer">
-                  <div className="icon-box">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <circle cx="12" cy="12" r="10" />
-                      <line x1="2" y1="12" x2="22" y2="12" />
-                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
-                      Tu Propio Portal de Propiedades
-                    </h3>
-                    <p className="text-brand-muted leading-relaxed text-[17px]">
-                      Deja de depender solo de portales externos. Construimos{" "}
-                      <strong className="text-brand-white">tu plataforma propia</strong>{" "}
-                      para captar clientes directos y posicionar tu marca.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <div className="line-divider max-w-3xl mx-auto" />
-
-        {/* ===== WHY US ===== */}
-        <section className="py-28 px-4 sm:px-6 lg:px-8 content-auto">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16 reveal">
-              <p className="text-sm font-medium tracking-widest uppercase text-purple-400 mb-4">
-                La diferencia
-              </p>
-              <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
-                ¿Por Qué <span className="gradient-text">AlekAgency</span>?
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="glow-card-wrapper reveal">
-                <div className="glow-card-inner text-center cursor-pointer">
-                  <div className="icon-box mx-auto mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-                    </svg>
-                  </div>
-                  <h3 className="font-heading text-xl font-bold mb-3">
-                    Sistemas a Tu Medida
-                  </h3>
-                  <p className="text-brand-muted leading-relaxed">
-                    Nada de plantillas genéricas. Construimos todo alrededor de{" "}
-                    <strong className="text-brand-white">TU</strong> negocio
-                    inmobiliario.
-                  </p>
-                </div>
-              </div>
-
-              <div className="glow-card-wrapper reveal reveal-delay-1">
-                <div className="glow-card-inner text-center cursor-pointer">
-                  <div className="icon-box mx-auto mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                      <path d="m9 12 2 2 4-4" />
-                    </svg>
-                  </div>
-                  <h3 className="font-heading text-xl font-bold mb-3">
-                    Tú Descansas, Nosotros Mantenemos
-                  </h3>
-                  <p className="text-brand-muted leading-relaxed">
-                    Nos encargamos de todo lo técnico. Tú solo ves{" "}
-                    <strong className="text-brand-white">resultados</strong>.
-                  </p>
-                </div>
-              </div>
-
-              <div className="glow-card-wrapper reveal reveal-delay-2">
-                <div className="glow-card-inner text-center cursor-pointer">
-                  <div className="icon-box mx-auto mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-                      <polyline points="17 6 23 6 23 12" />
-                    </svg>
-                  </div>
-                  <h3 className="font-heading text-xl font-bold mb-3">
-                    Resultados Medibles
-                  </h3>
-                  <p className="text-brand-muted leading-relaxed">
-                    Menos horas al celular. Más cierres. Más ingresos.{" "}
-                    <strong className="text-brand-white">Así de simple.</strong>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* ===== FINAL CTA ===== */}
         <section id="agendar" className="py-28 px-4 sm:px-6 lg:px-8 cta-glow">
           <div className="max-w-3xl mx-auto text-center relative z-10">
@@ -628,12 +469,12 @@ export default function Home() {
                 href={CAL_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="gradient-btn inline-flex items-center gap-2 text-white font-semibold text-lg px-12 py-5 rounded-full cursor-pointer"
+                className="shiny-cta"
               >
                 <span>Quiero Mi Demo Gratis</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5 relative z-10"
+                  className="w-5 h-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
