@@ -1055,6 +1055,52 @@ video::-webkit-media-controls-panel {
   animation-delay: 0.8s;
 }
 
+/* ===== CHAT WIDGET ===== */
+@keyframes chatPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.chat-panel-in {
+  animation: chatPanelIn 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes chatFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.chat-fade-in {
+  animation: chatFadeIn 0.25s ease;
+}
+.chat-fab-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(168, 85, 247, 0.5);
+  animation: playRingPulse 2.6s ease-out infinite;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chat-panel-in,
+  .chat-fade-in {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+  .chat-fab-ring {
+    animation: none !important;
+    opacity: 0.3;
+  }
+}
+
 /* ===== PERFORMANCE: CONTENT VISIBILITY ===== */
 .content-auto {
   content-visibility: auto;

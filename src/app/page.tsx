@@ -1,14 +1,16 @@
 import Navbar from "@/components/Navbar";
 import VideoPlayer from "@/components/VideoPlayer";
 import RevealEffects from "@/components/RevealEffects";
+import ChatLauncher from "@/components/ChatLauncher";
+import OpenChatButton from "@/components/OpenChatButton";
 
 const CAL_LINK = "https://cal.com/alek-nava-i4gvq6/30min?overlayCalendar=true";
-const TELEGRAM_LINK = "https://t.me/alekagency2bot";
 
 export default function Home() {
   return (
     <>
       <RevealEffects />
+      <ChatLauncher />
       <Navbar />
 
       <main className="relative z-10" style={{ overflowX: "clip" }}>
@@ -184,27 +186,17 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="hidden md:block mt-10 reveal">
-                  <a
-                    href={TELEGRAM_LINK}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="shiny-cta shiny-cta-white whitespace-nowrap"
-                  >
+                  <OpenChatButton className="shiny-cta shiny-cta-white whitespace-nowrap">
                     Mira Cómo Funciona
-                  </a>
+                  </OpenChatButton>
                 </div>
               </div>
             </div>
 
             <div className="md:hidden text-center mt-10 reveal">
-              <a
-                href={TELEGRAM_LINK}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shiny-cta shiny-cta-white whitespace-nowrap"
-              >
+              <OpenChatButton className="shiny-cta shiny-cta-white whitespace-nowrap">
                 Mira Cómo Funciona
-              </a>
+              </OpenChatButton>
             </div>
           </div>
         </section>
