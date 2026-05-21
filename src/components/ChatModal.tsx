@@ -92,8 +92,13 @@ const CHATBOT_URL =
 
 const CHAT_ID_KEY = "alek_webchat_id";
 
-const GREETING =
-  "¡Hola! 👋 Soy el asistente con IA de Luce Real Estate. Puedo ayudarte con dudas sobre propiedades, precios, disponibilidad y agendar una visita. ¿En qué te puedo ayudar?";
+// Mensajes de bienvenida. Dejan claro que es una DEMO del producto que
+// vende AlekAgency: el bot simula ser la inmobiliaria ficticia "Luce
+// Real Estate" para que el prospecto vea cómo funcionaría en su negocio.
+const GREETING: string[] = [
+  "¡Hola! 👋 Soy un asistente con IA de demostración, creado por AlekAgency.",
+  "En este demo simulo ser el chatbot de Luce Real Estate, una inmobiliaria de ejemplo. Pregúntame por propiedades, precios o agenda una visita y verás cómo respondería un bot como este en tu propio negocio. ¿Qué te gustaría probar?",
+];
 
 // Genera o recupera un id estable por visitante para mantener el hilo.
 function getChatId(): string {
@@ -118,9 +123,9 @@ export default function ChatModal({
   onClose: () => void;
 }) {
   const [value, setValue] = useState("");
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 0, role: "bot", text: GREETING },
-  ]);
+  const [messages, setMessages] = useState<Message[]>(
+    GREETING.map((text, i) => ({ id: i, role: "bot" as Role, text }))
+  );
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatIdRef = useRef<string>("");
@@ -280,7 +285,7 @@ export default function ChatModal({
             </PromptInputActions>
           </PromptInput>
           <p className="mt-2 text-center text-[10px] text-brand-muted/70">
-            Asistente con IA de Luce Real Estate · puede cometer errores.
+            Demo de chatbot con IA por AlekAgency · puede cometer errores.
           </p>
         </div>
       </div>
