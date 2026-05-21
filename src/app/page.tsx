@@ -245,14 +245,12 @@ export default function Home() {
               {/* Feature 1: Dashboard — text + photo */}
               <div className="reveal grid items-center gap-8 md:grid-cols-2 lg:gap-12">
                 <div>
-                  <div className="icon-box mb-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <rect x="3" y="3" width="7" height="9" rx="1" />
-                      <rect x="14" y="3" width="7" height="5" rx="1" />
-                      <rect x="14" y="12" width="7" height="9" rx="1" />
-                      <rect x="3" y="16" width="7" height="5" rx="1" />
-                    </svg>
-                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-14 h-14 text-purple-400 mb-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                    <rect x="3" y="3" width="7" height="9" rx="1" />
+                    <rect x="14" y="3" width="7" height="5" rx="1" />
+                    <rect x="14" y="12" width="7" height="9" rx="1" />
+                    <rect x="3" y="16" width="7" height="5" rx="1" />
+                  </svg>
                   <h3 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
                     Dashboard de Propiedades
                   </h3>
@@ -280,13 +278,11 @@ export default function Home() {
               {/* Features 2 & 3: two columns */}
               <div className="reveal grid gap-10 sm:grid-cols-2 sm:gap-12">
                 <div>
-                  <div className="icon-box mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <ellipse cx="12" cy="5" rx="9" ry="3" />
-                      <path d="M3 5v14a9 3 0 0 0 18 0V5" />
-                      <path d="M3 12a9 3 0 0 0 18 0" />
-                    </svg>
-                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 text-purple-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                    <ellipse cx="12" cy="5" rx="9" ry="3" />
+                    <path d="M3 5v14a9 3 0 0 0 18 0V5" />
+                    <path d="M3 12a9 3 0 0 0 18 0" />
+                  </svg>
                   <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
                     Respuestas 100% Verídicas
                   </h3>
@@ -299,14 +295,12 @@ export default function Home() {
                   </p>
                 </div>
                 <div>
-                  <div className="icon-box mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 text-purple-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
                   <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
                     CRM Integrado
                   </h3>
@@ -322,12 +316,10 @@ export default function Home() {
 
               {/* Feature 4: Monitoring — full width */}
               <div className="reveal">
-                <div className="icon-box mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 text-purple-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
                 <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
                   Monitoreo e Intervención Humana
                 </h3>
