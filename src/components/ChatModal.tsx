@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUp, Sparkles, X } from "lucide-react";
 import {
   PromptInput,
@@ -92,6 +92,10 @@ const CHATBOT_URL =
 
 const CHAT_ID_KEY = "alek_webchat_id";
 
+// Ventana de agrupado: tras este tiempo de inactividad se envían juntos
+// todos los mensajes que el usuario haya escrito (estilo WhatsApp).
+const BUFFER_MS = 4000;
+
 // Mensajes de bienvenida. Dejan claro que es una DEMO del producto que
 // vende AlekAgency: el bot simula ser la inmobiliaria ficticia "Luce
 // Real Estate" para que el prospecto vea cómo funcionaría en su negocio.
@@ -130,6 +134,15 @@ export default function ChatModal({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatIdRef = useRef<string>("");
 
+  // Buffer estilo WhatsApp: el usuario puede mandar varios mensajes seguidos;
+  // se agrupan y se envían juntos tras BUFFER_MS de inactividad.
+  const pendingRef = useRef<string[]>([]); // mensajes en cola, sin enviar
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const sendingRef = useRef(false); // hay una respuesta del bot en curso
+  const idRef = useRef(100); // ids únicos para los mensajes
+
+  const nextId = () => ++idRef.current;
+
   useEffect(() => {
     chatIdRef.current = getChatId();
   }, []);
@@ -147,17 +160,34 @@ export default function ChatModal({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, sending]);
 
-  const sendMessage = useCallback(async () => {
-    const text = value.trim();
-    if (!text || sending) return;
+  // Limpia el timer pendiente al desmontar.
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
-    setValue("");
-    setMessages((prev) => [
-      ...prev,
-      { id: Date.now(), role: "user", text },
-    ]);
+  function scheduleFlush() {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      void flush();
+    }, BUFFER_MS);
+  }
+
+  async function flush() {
+    // Si el bot aún está respondiendo, espera al siguiente turno.
+    if (sendingRef.current) {
+      scheduleFlush();
+      return;
+    }
+    const batch = pendingRef.current;
+    if (batch.length === 0) return;
+    pendingRef.current = [];
+    const text = batch.join("\n").trim();
+    if (!text) return;
+
+    sendingRef.current = true;
     setSending(true);
-
     try {
       const res = await fetch(`${CHATBOT_URL}/api/webchat`, {
         method: "POST",
@@ -174,25 +204,37 @@ export default function ChatModal({
       }
       setMessages((prev) => [
         ...prev,
-        ...chunks.map((c, i) => ({
-          id: Date.now() + i + 1,
-          role: "bot" as Role,
-          text: c,
-        })),
+        ...chunks.map((c) => ({ id: nextId(), role: "bot" as Role, text: c })),
       ]);
     } catch {
       setMessages((prev) => [
         ...prev,
         {
-          id: Date.now() + 1,
-          role: "bot",
+          id: nextId(),
+          role: "bot" as Role,
           text: "Hubo un problema de conexión. Intenta de nuevo en un momento.",
         },
       ]);
     } finally {
+      sendingRef.current = false;
       setSending(false);
     }
-  }, [value, sending]);
+    // Si llegaron más mensajes mientras el bot respondía, prográmalos.
+    if (pendingRef.current.length > 0) scheduleFlush();
+  }
+
+  // Encola el mensaje del usuario: aparece al instante y se agrupa para enviar.
+  function handleSend() {
+    const text = value.trim();
+    if (!text) return;
+    setValue("");
+    setMessages((prev) => [
+      ...prev,
+      { id: nextId(), role: "user", text },
+    ]);
+    pendingRef.current.push(text);
+    scheduleFlush();
+  }
 
   if (!open) return null;
 
@@ -264,7 +306,7 @@ export default function ChatModal({
           <PromptInput
             value={value}
             onValueChange={setValue}
-            onSubmit={sendMessage}
+            onSubmit={handleSend}
             className="border-white/[0.08] bg-[#111114]"
           >
             <PromptInputTextarea
@@ -274,9 +316,9 @@ export default function ChatModal({
             <PromptInputActions className="justify-end pt-1">
               <PromptInputAction tooltip="Enviar mensaje">
                 <button
-                  onClick={sendMessage}
+                  onClick={handleSend}
                   aria-label="Enviar mensaje"
-                  disabled={!value.trim() || sending}
+                  disabled={!value.trim()}
                   className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-purple-400 text-white transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <ArrowUp className="h-4.5 w-4.5" />
