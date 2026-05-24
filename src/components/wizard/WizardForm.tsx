@@ -48,6 +48,7 @@ type FormData = {
 
   // FAQs
   customFaqs: string;
+  faqFile: File | null;
 
   // Handoff
   handoffCases: string[];
@@ -99,6 +100,7 @@ const INITIAL: FormData = {
   ],
   dbFile: null,
   customFaqs: "",
+  faqFile: null,
   handoffCases: [],
   handoffOther: "",
   hasCrm: "",
@@ -495,8 +497,8 @@ export default function WizardForm() {
     try {
       const fd = new FormData();
       for (const [k, v] of Object.entries(data)) {
-        if (k === "dbFile") {
-          if (v instanceof File) fd.append("dbFile", v);
+        if (k === "dbFile" || k === "faqFile") {
+          if (v instanceof File) fd.append(k, v);
         } else {
           fd.append(k, JSON.stringify(v));
         }
@@ -1053,7 +1055,7 @@ function renderStep(
           <StepHeader
             number={8}
             title="Preguntas frecuentes"
-            subtitle="Algunos ejemplos de lo que el chatbot responderá automáticamente. Añade abajo cualquier otra que quieras incluir."
+            subtitle="Algunos ejemplos de lo que el chatbot responderá automáticamente. Añade abajo las tuyas."
           />
           <div className="mb-6 grid gap-2 sm:grid-cols-2">
             {EXAMPLE_FAQS.map((q) => (
@@ -1065,6 +1067,7 @@ function renderStep(
               </div>
             ))}
           </div>
+
           <FieldLabel>¿Alguna otra pregunta que el bot deba responder?</FieldLabel>
           <TextArea
             value={d.customFaqs}
@@ -1072,6 +1075,45 @@ function renderStep(
             placeholder="Una por línea, por ejemplo: ¿Aceptan mascotas?, ¿Cuál es el depósito requerido?…"
             rows={6}
           />
+
+          <div className="mt-6">
+            <FieldLabel>
+              O sube tu información completa de preguntas frecuentes
+            </FieldLabel>
+            <label className="flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-purple-400/25 bg-white/[0.02] px-6 py-10 text-center transition-colors hover:border-purple-400/50 hover:bg-white/[0.04]">
+              <Upload className="h-8 w-8 text-purple-300" />
+              <div>
+                <p className="font-medium text-brand-white">
+                  {d.faqFile
+                    ? d.faqFile.name
+                    : "Arrastra o haz clic para seleccionar"}
+                </p>
+                <p className="mt-1 text-sm text-brand-muted">
+                  Documento, audio, texto, PDF, imágenes… cualquier formato
+                </p>
+              </div>
+              <input
+                type="file"
+                className="hidden"
+                onChange={(e) => set("faqFile", e.target.files?.[0] ?? null)}
+              />
+            </label>
+            <p className="mt-2 text-xs text-brand-muted/80">
+              Cuánta más información des, más precisas serán las respuestas que
+              el chatbot dé a tus prospectos.
+            </p>
+          </div>
+
+          <div className="mt-6 flex gap-3 rounded-xl border border-purple-400/20 bg-purple-500/5 p-4 text-sm text-brand-muted">
+            <CircleAlert className="h-5 w-5 shrink-0 text-purple-300" />
+            <p>
+              <strong className="text-brand-white">
+                Toda la información que compartas aquí es 100% confidencial.
+              </strong>{" "}
+              Se usa únicamente para configurar tu chatbot y no se comparte con
+              terceros.
+            </p>
+          </div>
         </div>
       );
 
