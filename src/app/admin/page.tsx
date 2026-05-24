@@ -160,7 +160,12 @@ export default async function AdminDashboard() {
   }
 
   let rows: TrialRequest[] = [];
-  let queryError: string | null = null;
+  let queryError: {
+    message: string;
+    code?: string;
+    details?: string;
+    hint?: string;
+  } | null = null;
   try {
     const admin = createSupabaseAdminClient();
     const { data, error } = await admin
@@ -171,10 +176,20 @@ export default async function AdminDashboard() {
       .order("created_at", { ascending: false });
     if (error) throw error;
     rows = (data as TrialRequest[] | null) ?? [];
-  } catch (e) {
+  } catch (e: unknown) {
     console.error("[admin] query error", e);
-    queryError =
-      e instanceof Error ? e.message : "Error desconocido consultando la base de datos.";
+    const err = e as {
+      message?: string;
+      code?: string;
+      details?: string;
+      hint?: string;
+    };
+    queryError = {
+      message: err?.message ?? String(e) ?? "Error desconocido",
+      code: err?.code,
+      details: err?.details,
+      hint: err?.hint,
+    };
   }
 
   if (queryError) {
@@ -184,12 +199,45 @@ export default async function AdminDashboard() {
         userEmail={user.email ?? undefined}
         details={
           <>
-            <p>{queryError}</p>
-            <p className="mt-3">
-              Verifica que <code className="font-mono text-purple-200">SUPABASE_SERVICE_ROLE_KEY</code> sea la <em>service_role</em> key del proyecto{" "}
-              <strong className="text-brand-white">SuperCerebro</strong> (no la anon) y que la tabla{" "}
-              <code className="font-mono text-purple-200">public.trial_requests</code> exista.
-            </p>
+            <p className="font-medium text-brand-white">{queryError.message}</p>
+            {queryError.code && (
+              <p className="mt-1 text-xs">
+                Código:{" "}
+                <code className="font-mono text-purple-200">
+                  {queryError.code}
+                </code>
+              </p>
+            )}
+            {queryError.details && (
+              <p className="mt-1 text-xs">Detalles: {queryError.details}</p>
+            )}
+            {queryError.hint && (
+              <p className="mt-1 text-xs">Pista: {queryError.hint}</p>
+            )}
+            <div className="mt-4 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 text-xs">
+              <p className="mb-2 font-medium text-brand-white">
+                Cosas a verificar:
+              </p>
+              <ul className="space-y-1 text-brand-muted">
+                <li>
+                  •{" "}
+                  <code className="font-mono text-purple-200">
+                    SUPABASE_SERVICE_ROLE_KEY
+                  </code>{" "}
+                  debe ser la <em>service_role</em> key del proyecto SuperCerebro (no la anon ni la publishable).
+                </li>
+                <li>
+                  • Revisa que <code className="font-mono text-purple-200">SUPABASE_URL</code> apunte a{" "}
+                  <code className="font-mono text-purple-200">
+                    https://xdfqmwottluhnzpsjmmn.supabase.co
+                  </code>
+                  .
+                </li>
+                <li>
+                  • Verifica que no haya espacios o saltos de línea pegados al copiar la key.
+                </li>
+              </ul>
+            </div>
           </>
         }
       />
