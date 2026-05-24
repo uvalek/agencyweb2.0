@@ -1,11 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import VideoPlayer from "@/components/VideoPlayer";
 import RevealEffects from "@/components/RevealEffects";
 import ChatLauncher from "@/components/ChatLauncher";
 import OpenChatButton from "@/components/OpenChatButton";
 
-const CAL_LINK = "https://cal.com/alek-nava-i4gvq6/30min?overlayCalendar=true";
+const TRIAL_LINK = "/prueba";
 
 export default function Home() {
   return (
@@ -77,13 +78,8 @@ export default function Home() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-1 sm:pt-4 hero-fade-in-up hero-delay-600">
-                <a
-                  href={CAL_LINK}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="shiny-cta"
-                >
-                  <span>Agenda Tu Demo Gratis</span>
+                <Link href={TRIAL_LINK} className="shiny-cta">
+                  <span>Prueba de 14 días gratis</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="w-5 h-5"
@@ -94,11 +90,11 @@ export default function Home() {
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
-                </a>
+                </Link>
               </div>
 
               <p className="hidden sm:block text-sm text-brand-muted hero-fade-in-up hero-delay-800">
-                15 min que pueden transformar tu operación inmobiliaria
+                Sin tarjeta. Sin compromiso. Tu IA inmobiliaria lista en días.
               </p>
             </div>
           </div>
@@ -473,13 +469,8 @@ export default function Home() {
                 trabajar para tu operación inmobiliaria.
               </p>
 
-              <a
-                href={CAL_LINK}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shiny-cta"
-              >
-                <span>Quiero Mi Demo Gratis</span>
+              <Link href={TRIAL_LINK} className="shiny-cta">
+                <span>Prueba de 14 días gratis</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-5 h-5"
@@ -490,10 +481,10 @@ export default function Home() {
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
-              </a>
+              </Link>
 
               <p className="text-brand-muted text-sm mt-6">
-                Sin costo · Sin letra chica
+                Sin tarjeta · Sin compromiso
               </p>
             </div>
           </div>
