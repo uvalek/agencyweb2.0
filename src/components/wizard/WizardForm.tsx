@@ -561,7 +561,12 @@ export default function WizardForm() {
       </header>
 
       {/* Step content */}
-      <main className="flex flex-1 items-start justify-center px-5 pt-6 pb-32 sm:items-center sm:px-10 sm:py-12">
+      <main
+        className="flex flex-1 items-start justify-center px-5 pt-6 sm:items-start sm:px-10 sm:pt-12"
+        style={{
+          paddingBottom: "calc(9rem + env(safe-area-inset-bottom, 0px))",
+        }}
+      >
         <div className="w-full max-w-2xl">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
@@ -578,7 +583,12 @@ export default function WizardForm() {
       </main>
 
       {/* Footer nav */}
-      <footer className="fixed bottom-0 left-0 right-0 z-20 border-t border-white/[0.06] bg-[#050505]/85 px-5 py-4 backdrop-blur-xl sm:px-10">
+      <footer
+        className="fixed bottom-0 left-0 right-0 z-20 border-t border-white/[0.06] bg-[#050505]/85 px-5 pt-4 backdrop-blur-xl sm:px-10"
+        style={{
+          paddingBottom: "calc(1rem + env(safe-area-inset-bottom, 0px))",
+        }}
+      >
         <div className="mx-auto flex max-w-2xl items-center justify-between gap-3">
           <button
             type="button"
