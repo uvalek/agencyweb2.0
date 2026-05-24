@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { normalizeSupabaseUrl } from "./admin";
 
 // Server-side Supabase client with the authenticated user's session,
 // driven by Next.js cookies. Use this from server components / route
@@ -8,8 +9,8 @@ export async function createSupabaseServerClient() {
   const cookieStore = await cookies();
 
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    normalizeSupabaseUrl(process.env.NEXT_PUBLIC_SUPABASE_URL!),
+    (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "").trim(),
     {
       cookies: {
         getAll() {
