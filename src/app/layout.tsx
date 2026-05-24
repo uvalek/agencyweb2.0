@@ -19,10 +19,6 @@ export const metadata: Metadata = {
   title: "AlekAgency | IA para el Sector Inmobiliario",
   description:
     "Sistemas de IA para el sector inmobiliario: atención 24/7 a clientes, seguimiento automático de prospectos, gestión de propiedades y más.",
-  icons: {
-    icon: "/ICONO COLOR.svg",
-    apple: "/favicon-180.png",
-  },
 };
 
 export default function RootLayout({
