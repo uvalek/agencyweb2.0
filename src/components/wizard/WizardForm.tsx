@@ -9,6 +9,7 @@ import {
   Check,
   CircleAlert,
   CornerDownLeft,
+  ShieldCheck,
   Sparkles,
   Upload,
 } from "lucide-react";
@@ -663,6 +664,50 @@ function renderStep(
             </kbd>{" "}
             para avanzar.
           </p>
+
+          {/* Confidentiality / trust block */}
+          <div className="mt-10 rounded-2xl border border-purple-400/20 bg-purple-500/[0.05] p-5 sm:p-6">
+            <div className="flex items-start gap-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/15 text-purple-300">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
+              <div className="text-sm leading-relaxed text-brand-muted">
+                <p className="mb-2 font-heading text-base font-bold text-brand-white">
+                  Tu información está segura con nosotros.
+                </p>
+                <p className="mb-3">
+                  Todo lo que compartas aquí se guarda en nuestra base de datos
+                  privada, protegida con cifrado y altos estándares de
+                  seguridad. Solo nuestro equipo tiene acceso, y únicamente
+                  para configurar tu chatbot. No vendemos, alquilamos ni
+                  compartimos tus datos con terceros — nunca.
+                </p>
+                <p>
+                  Cumplimos con la{" "}
+                  <strong className="text-brand-white">
+                    Ley Federal de Protección de Datos Personales en Posesión
+                    de los Particulares (LFPDPPP)
+                  </strong>
+                  . Puedes solicitar acceso, corrección o eliminación de tu
+                  información cuando quieras escribiéndonos a{" "}
+                  <a
+                    href="mailto:agencyalek@gmail.com"
+                    className="text-purple-300 underline underline-offset-2 hover:text-purple-200"
+                  >
+                    agencyalek@gmail.com
+                  </a>
+                  .
+                </p>
+                <Link
+                  href="/privacidad"
+                  className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-purple-300 hover:text-purple-200"
+                >
+                  Lee nuestra política de privacidad completa
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       );
 
