@@ -109,21 +109,35 @@ export default async function RequestDetail({
 }) {
   const { id } = await params;
 
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  let user: { email?: string | null } | null = null;
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase.auth.getUser();
+    if (error) throw error;
+    user = data.user;
+  } catch (e) {
+    console.error("[admin/detail] auth error", e);
+    redirect("/admin/login");
+  }
   if (!user) redirect("/admin/login");
   const adminEmail = process.env.ADMIN_EMAIL;
   if (adminEmail && user.email !== adminEmail) redirect("/admin/login");
 
+  let r: FullRequest | null = null;
   const admin = createSupabaseAdminClient();
-  const { data } = await admin
-    .from("trial_requests")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (!data) notFound();
-  const r = data as FullRequest;
+  try {
+    const { data, error } = await admin
+      .from("trial_requests")
+      .select("*")
+      .eq("id", id)
+      .single();
+    if (error) throw error;
+    r = data as FullRequest;
+  } catch (e) {
+    console.error("[admin/detail] query error", e);
+    notFound();
+  }
+  if (!r) notFound();
 
   // Signed URLs for the private bucket files (1h expiry)
   async function sign(path: string | null): Promise<string | null> {

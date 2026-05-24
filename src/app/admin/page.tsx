@@ -1,11 +1,72 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, LogOut, Mail, MessageSquare, Users } from "lucide-react";
+import { AlertCircle, ArrowRight, LogOut, Mail, MessageSquare, Users } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { signOut } from "./actions";
 
 export const dynamic = "force-dynamic";
+
+function missingEnvVars() {
+  const missing: string[] = [];
+  if (!process.env.SUPABASE_URL) missing.push("SUPABASE_URL");
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY)
+    missing.push("SUPABASE_SERVICE_ROLE_KEY");
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL)
+    missing.push("NEXT_PUBLIC_SUPABASE_URL");
+  if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+    missing.push("NEXT_PUBLIC_SUPABASE_ANON_KEY");
+  return missing;
+}
+
+function ErrorScreen({
+  title,
+  details,
+  userEmail,
+}: {
+  title: string;
+  details: React.ReactNode;
+  userEmail?: string;
+}) {
+  return (
+    <div className="px-5 py-12 sm:px-10 sm:py-16">
+      <div className="mx-auto max-w-2xl">
+        <div className="mb-6 flex items-center justify-between">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/Logo Monocromatico Blanco.svg"
+            alt="AlekAgency"
+            className="h-10 w-auto"
+          />
+          {userEmail && (
+            <form action={signOut}>
+              <button
+                type="submit"
+                className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.02] px-4 py-2 text-sm text-brand-white hover:bg-white/[0.05]"
+              >
+                <LogOut className="h-4 w-4" /> Salir
+              </button>
+            </form>
+          )}
+        </div>
+        <div className="rounded-2xl border border-red-500/30 bg-red-500/[0.05] p-6 sm:p-8">
+          <div className="mb-3 flex items-center gap-2 text-red-300">
+            <AlertCircle className="h-5 w-5" />
+            <span className="font-heading text-sm font-bold uppercase tracking-wider">
+              Error
+            </span>
+          </div>
+          <h1 className="font-heading text-2xl font-bold text-brand-white">
+            {title}
+          </h1>
+          <div className="mt-4 text-sm leading-relaxed text-brand-muted">
+            {details}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 type TrialRequest = {
   id: string;
@@ -49,8 +110,47 @@ const PLATFORM_LABELS: Record<string, string> = {
 };
 
 export default async function AdminDashboard() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  // Diagnostic: missing env vars
+  const missing = missingEnvVars();
+  if (missing.length > 0) {
+    return (
+      <ErrorScreen
+        title="Faltan variables de entorno"
+        details={
+          <>
+            <p>
+              Configura estas variables en{" "}
+              <strong className="text-brand-white">
+                Vercel → Settings → Environment Variables
+              </strong>{" "}
+              y haz un redeploy:
+            </p>
+            <ul className="mt-3 space-y-1">
+              {missing.map((v) => (
+                <li
+                  key={v}
+                  className="rounded-md border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 font-mono text-xs text-purple-200"
+                >
+                  {v}
+                </li>
+              ))}
+            </ul>
+          </>
+        }
+      />
+    );
+  }
+
+  let user: { email?: string | null; id: string } | null = null;
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase.auth.getUser();
+    if (error) throw error;
+    user = data.user;
+  } catch (e) {
+    console.error("[admin] auth error", e);
+    redirect("/admin/login");
+  }
 
   if (!user) redirect("/admin/login");
 
@@ -59,15 +159,42 @@ export default async function AdminDashboard() {
     redirect("/admin/login");
   }
 
-  const admin = createSupabaseAdminClient();
-  const { data, error } = await admin
-    .from("trial_requests")
-    .select(
-      "id, created_at, company_name, contact_name, email, whatsapp, platforms, daily_messages, team_size, location, has_crm, personality"
-    )
-    .order("created_at", { ascending: false });
+  let rows: TrialRequest[] = [];
+  let queryError: string | null = null;
+  try {
+    const admin = createSupabaseAdminClient();
+    const { data, error } = await admin
+      .from("trial_requests")
+      .select(
+        "id, created_at, company_name, contact_name, email, whatsapp, platforms, daily_messages, team_size, location, has_crm, personality"
+      )
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    rows = (data as TrialRequest[] | null) ?? [];
+  } catch (e) {
+    console.error("[admin] query error", e);
+    queryError =
+      e instanceof Error ? e.message : "Error desconocido consultando la base de datos.";
+  }
 
-  const rows = (data as TrialRequest[] | null) ?? [];
+  if (queryError) {
+    return (
+      <ErrorScreen
+        title="No pudimos leer la base de datos"
+        userEmail={user.email ?? undefined}
+        details={
+          <>
+            <p>{queryError}</p>
+            <p className="mt-3">
+              Verifica que <code className="font-mono text-purple-200">SUPABASE_SERVICE_ROLE_KEY</code> sea la <em>service_role</em> key del proyecto{" "}
+              <strong className="text-brand-white">SuperCerebro</strong> (no la anon) y que la tabla{" "}
+              <code className="font-mono text-purple-200">public.trial_requests</code> exista.
+            </p>
+          </>
+        }
+      />
+    );
+  }
 
   // Stats
   const now = Date.now();
@@ -137,11 +264,7 @@ export default async function AdminDashboard() {
         </div>
 
         {/* List */}
-        {error ? (
-          <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-            Error cargando datos: {error.message}
-          </div>
-        ) : rows.length === 0 ? (
+        {rows.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-white/[0.12] bg-white/[0.02] px-6 py-16 text-center">
             <p className="text-base text-brand-muted">
               Aún no hay solicitudes. En cuanto alguien envíe el formulario, lo
