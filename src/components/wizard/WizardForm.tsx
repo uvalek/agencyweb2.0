@@ -9,6 +9,7 @@ import {
   Check,
   CircleAlert,
   CornerDownLeft,
+  Play,
   ShieldCheck,
   Sparkles,
   Upload,
@@ -74,6 +75,9 @@ type FormData = {
   whatsapp: string;
   preferredContact: string;
 
+  // Third-party connections
+  manychatStatus: "" | "yes" | "no";
+
   // Terms
   acceptTerms: boolean;
 };
@@ -115,6 +119,7 @@ const INITIAL: FormData = {
   email: "",
   whatsapp: "",
   preferredContact: "",
+  manychatStatus: "",
   acceptTerms: false,
 };
 
@@ -266,7 +271,130 @@ const EXAMPLE_FAQS = [
   "¿Es para renta o venta?",
 ];
 
-const STEPS_TOTAL = 14;
+const STEPS_TOTAL = 15;
+
+const ACCESS_EMAIL = "alekhammer13@gmail.com";
+
+const ManyChatStepsExisting: React.ReactNode[] = [
+  <>Entra a tu cuenta de ManyChat.</>,
+  <>
+    Ve a <Bold>Settings → Team</Bold> en el menú lateral.
+  </>,
+  <>
+    Haz clic en <Bold>Invite Team Member</Bold> y agrega mi correo:{" "}
+    <Email>{ACCESS_EMAIL}</Email> con permisos de <Bold>Admin</Bold>.
+  </>,
+  <>Listo — recibo la invitación y conecto tu chatbot.</>,
+];
+
+const ManyChatStepsNew: React.ReactNode[] = [
+  <>
+    Entra a{" "}
+    <ExtLink href="https://manychat.com">manychat.com</ExtLink> y crea tu cuenta
+    gratis.
+  </>,
+  <>
+    Conecta tu página de Facebook o tu cuenta de Instagram dentro del
+    onboarding inicial (ManyChat te guía paso a paso).
+  </>,
+  <>
+    Una vez dentro, ve a <Bold>Settings → Team</Bold> en el menú lateral.
+  </>,
+  <>
+    Haz clic en <Bold>Invite Team Member</Bold> y agrega mi correo:{" "}
+    <Email>{ACCESS_EMAIL}</Email> con permisos de <Bold>Admin</Bold>.
+  </>,
+  <>Listo — recibo la invitación y empiezo a configurar tu chatbot.</>,
+];
+
+const OpenAISteps: React.ReactNode[] = [
+  <>
+    Entra a{" "}
+    <ExtLink href="https://platform.openai.com">platform.openai.com</ExtLink>{" "}
+    y crea tu cuenta (puedes usar Google o tu correo).
+  </>,
+  <>Verifica tu número de teléfono cuando te lo pida.</>,
+  <>
+    Agrega un método de pago en <Bold>Settings → Billing</Bold>. La API se paga
+    por consumo, no es suscripción mensual.
+  </>,
+  <>
+    Ve a <Bold>Settings → Organization → Projects</Bold> y haz clic en{" "}
+    <Bold>Create project</Bold>. Ponle un nombre como “Chatbot Inmobiliaria”.
+  </>,
+  <>
+    Dentro del proyecto, abre <Bold>Members</Bold> e invita a:{" "}
+    <Email>{ACCESS_EMAIL}</Email> con rol de <Bold>Owner</Bold> o{" "}
+    <Bold>Admin</Bold>.
+  </>,
+  <>Listo — yo genero la API key y la conecto a tu chatbot.</>,
+];
+
+function Bold({ children }: { children: React.ReactNode }) {
+  return <strong className="text-brand-white">{children}</strong>;
+}
+
+function Email({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-block rounded bg-purple-500/15 px-1.5 py-0.5 font-mono text-[12px] text-purple-200">
+      {children}
+    </span>
+  );
+}
+
+function ExtLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-purple-300 underline underline-offset-2 hover:text-purple-200"
+    >
+      {children}
+    </a>
+  );
+}
+
+function VideoPlaceholder({ label }: { label: string }) {
+  return (
+    <div className="flex aspect-video w-full flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-purple-400/25 bg-white/[0.02] px-4 text-center">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/15">
+        <Play
+          className="h-5 w-5 text-purple-300"
+          fill="currentColor"
+          strokeWidth={0}
+        />
+      </div>
+      <p className="text-xs text-brand-muted/80">
+        Video tutorial · <span className="text-brand-white/80">{label}</span>
+      </p>
+      <p className="text-[10px] uppercase tracking-wider text-brand-muted/50">
+        Próximamente
+      </p>
+    </div>
+  );
+}
+
+function NumberedSteps({ steps }: { steps: React.ReactNode[] }) {
+  return (
+    <ol className="space-y-3">
+      {steps.map((step, i) => (
+        <li key={i} className="flex gap-3 text-sm leading-relaxed text-brand-muted">
+          <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-purple-500/15 text-[11px] font-bold text-purple-200">
+            {i + 1}
+          </span>
+          <span>{step}</span>
+        </li>
+      ))}
+    </ol>
+  );
+}
 
 /* -------------------------------------------------------------------------- */
 /*  Reusable input primitives                                                 */
@@ -478,6 +606,8 @@ export default function WizardForm() {
             data.preferredContact
         );
       case 13:
+        return data.manychatStatus !== "";
+      case 14:
         return data.acceptTerms;
       default:
         return true;
@@ -569,7 +699,9 @@ export default function WizardForm() {
           paddingBottom: "calc(9rem + env(safe-area-inset-bottom, 0px))",
         }}
       >
-        <div className="w-full max-w-2xl">
+        <div
+          className={`w-full ${step === 13 ? "max-w-4xl" : "max-w-2xl"}`}
+        >
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={step}
@@ -1388,11 +1520,101 @@ function renderStep(
         </div>
       );
 
-    case 13:
+    case 13: {
+      const has = d.manychatStatus !== "";
       return (
         <div>
           <StepHeader
             number={13}
+            title="Conexión a terceros"
+            subtitle="Para activar tu chatbot necesitamos acceso a dos plataformas: ManyChat (el conector con WhatsApp, Instagram y Messenger) y OpenAI (el cerebro del chatbot). Te dejamos el paso a paso para que sea sencillo."
+          />
+
+          {/* ManyChat */}
+          <section className="rounded-2xl border border-white/[0.06] bg-white/[0.015] p-5 sm:p-6">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-md bg-purple-500/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-purple-200">
+              01 · ManyChat
+            </div>
+            <h3 className="font-heading text-xl font-bold text-brand-white sm:text-2xl">
+              ¿Ya usas ManyChat?
+            </h3>
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <OptionCard
+                active={d.manychatStatus === "yes"}
+                onClick={() => set("manychatStatus", "yes")}
+              >
+                Sí, ya lo uso
+              </OptionCard>
+              <OptionCard
+                active={d.manychatStatus === "no"}
+                onClick={() => set("manychatStatus", "no")}
+              >
+                No, todavía no
+              </OptionCard>
+            </div>
+
+            {has && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-6 grid gap-6 md:grid-cols-2"
+              >
+                <div>
+                  <p className="mb-4 text-sm font-semibold text-brand-white">
+                    {d.manychatStatus === "yes"
+                      ? "Cómo darme acceso:"
+                      : "Crea tu cuenta y dame acceso:"}
+                  </p>
+                  <NumberedSteps
+                    steps={
+                      d.manychatStatus === "yes"
+                        ? ManyChatStepsExisting
+                        : ManyChatStepsNew
+                    }
+                  />
+                </div>
+                <VideoPlaceholder
+                  label={
+                    d.manychatStatus === "yes"
+                      ? "Cómo darme acceso a tu ManyChat"
+                      : "Crear cuenta de ManyChat y darme acceso"
+                  }
+                />
+              </motion.div>
+            )}
+          </section>
+
+          {/* OpenAI */}
+          <section className="mt-5 rounded-2xl border border-white/[0.06] bg-white/[0.015] p-5 sm:p-6">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-md bg-purple-500/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-purple-200">
+              02 · OpenAI API
+            </div>
+            <h3 className="font-heading text-xl font-bold text-brand-white sm:text-2xl">
+              Crea tu proyecto y dame acceso
+            </h3>
+
+            <div className="mt-6 grid gap-6 md:grid-cols-2">
+              <NumberedSteps steps={OpenAISteps} />
+              <VideoPlaceholder label="Crear cuenta de OpenAI y darme acceso" />
+            </div>
+          </section>
+
+          <div className="mt-5 flex gap-3 rounded-xl border border-purple-400/20 bg-purple-500/5 p-4 text-sm text-brand-muted">
+            <Sparkles className="h-5 w-5 shrink-0 text-purple-300" />
+            <p>
+              ¿Te trabaste en algún paso? No te preocupes — te acompañamos por
+              WhatsApp o email durante toda la configuración.
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    case 14:
+      return (
+        <div>
+          <StepHeader
+            number={14}
             title="Un detalle importante"
             subtitle="Antes de enviar, queremos ser transparentes sobre lo que cubre la prueba."
           />
