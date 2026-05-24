@@ -106,7 +106,7 @@ const INITIAL: FormData = {
   crmPreference: "",
   personality: "",
   calendarCount: "1",
-  calendars: [{ name: "", hours: "" }],
+  calendars: [],
   contactName: "",
   role: "",
   email: "",
@@ -263,7 +263,7 @@ const EXAMPLE_FAQS = [
   "¿Es para renta o venta?",
 ];
 
-const STEPS_TOTAL = 15;
+const STEPS_TOTAL = 14;
 
 /* -------------------------------------------------------------------------- */
 /*  Reusable input primitives                                                 */
@@ -413,10 +413,11 @@ export default function WizardForm() {
       return { ...d, [k]: next as unknown as FormData[K] };
     });
 
-  // Resize calendars array when calendarCount changes
+  // The main schedule (workingDays/Hours) is the primary calendar. The
+  // `calendars` array holds ADDITIONAL calendars beyond that one.
   useEffect(() => {
     const n =
-      data.calendarCount === "1" ? 1 : data.calendarCount === "2" ? 2 : 3;
+      data.calendarCount === "1" ? 0 : data.calendarCount === "2" ? 1 : 2;
     if (data.calendars.length !== n) {
       const next = Array.from({ length: n }, (_, i) =>
         data.calendars[i] ?? { name: "", hours: "" }
@@ -467,15 +468,13 @@ export default function WizardForm() {
       case 11:
         return Boolean(data.personality);
       case 12:
-        return true;
-      case 13:
         return Boolean(
           data.contactName.trim() &&
             data.role &&
             data.email.trim() &&
             data.preferredContact
         );
-      case 14:
+      case 13:
         return data.acceptTerms;
       default:
         return true;
@@ -845,8 +844,8 @@ function renderStep(
         <div>
           <StepHeader
             number={5}
-            title="Horario de atención humana"
-            subtitle="Tu equipo atiende en este horario. Fuera de él, el chatbot sigue activo con fines informativos."
+            title="Horario de atención y agendamiento"
+            subtitle="Estos horarios serán los que el chatbot use como referencia para agendar visitas y citas con tus prospectos."
           />
           <div className="space-y-6">
             <div>
@@ -891,12 +890,73 @@ function renderStep(
                 />
               </div>
             </div>
+
             <div className="flex gap-3 rounded-xl border border-purple-400/20 bg-purple-500/5 p-4 text-sm text-brand-muted">
               <Sparkles className="h-5 w-5 shrink-0 text-purple-300" />
               <p>
-                Tu chatbot también atenderá <strong className="text-brand-white">fuera de tu horario laboral</strong>, pero solo con fines informativos. Si requiere intervención humana, te avisa al volver.
+                Tu chatbot también atenderá{" "}
+                <strong className="text-brand-white">
+                  fuera de tu horario laboral
+                </strong>
+                , pero solo con fines informativos. Si requiere intervención
+                humana, te avisa al volver.
               </p>
             </div>
+
+            {/* Extra calendars */}
+            <div className="pt-2">
+              <FieldLabel>¿Necesitas calendarios adicionales?</FieldLabel>
+              <p className="mb-3 text-sm text-brand-muted">
+                Útil si manejas varios asesores con horarios distintos, o quieres
+                separar agendas (ej. visitas presenciales vs. llamadas).
+              </p>
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { id: "1", label: "Solo el de arriba" },
+                  { id: "2", label: "Agregar 1 más" },
+                  { id: "3+", label: "Agregar 2 o más" },
+                ].map((o) => (
+                  <OptionCard
+                    key={o.id}
+                    active={d.calendarCount === o.id}
+                    onClick={() => set("calendarCount", o.id)}
+                  >
+                    {o.label}
+                  </OptionCard>
+                ))}
+              </div>
+            </div>
+
+            {d.calendars.map((cal, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4"
+              >
+                <FieldLabel>Calendario adicional {i + 1}</FieldLabel>
+                <div className="space-y-3">
+                  <TextField
+                    value={cal.name}
+                    onChange={(v) => {
+                      const next = [...d.calendars];
+                      next[i] = { ...next[i], name: v };
+                      set("calendars", next);
+                    }}
+                    placeholder={`Ej. Visitas presenciales · Asesor ${i + 1}…`}
+                  />
+                  <TextField
+                    value={cal.hours}
+                    onChange={(v) => {
+                      const next = [...d.calendars];
+                      next[i] = { ...next[i], hours: v };
+                      set("calendars", next);
+                    }}
+                    placeholder="Horario personalizado · Ej. Lun-Vie 10:00 a 18:00"
+                  />
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       );
@@ -1177,62 +1237,6 @@ function renderStep(
         <div>
           <StepHeader
             number={12}
-            title="Agendamiento — calendarios"
-            subtitle="¿Necesitas que el bot agende en uno o varios calendarios?"
-          />
-          <div className="mb-6 grid grid-cols-3 gap-3">
-            {[
-              { id: "1", label: "1 calendario" },
-              { id: "2", label: "2 calendarios" },
-              { id: "3+", label: "3 o más" },
-            ].map((o) => (
-              <OptionCard
-                key={o.id}
-                active={d.calendarCount === o.id}
-                onClick={() => set("calendarCount", o.id)}
-              >
-                {o.label}
-              </OptionCard>
-            ))}
-          </div>
-          <div className="space-y-5">
-            {d.calendars.map((cal, i) => (
-              <div
-                key={i}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4"
-              >
-                <FieldLabel>Calendario {i + 1}</FieldLabel>
-                <div className="space-y-3">
-                  <TextField
-                    value={cal.name}
-                    onChange={(v) => {
-                      const next = [...d.calendars];
-                      next[i] = { ...next[i], name: v };
-                      set("calendars", next);
-                    }}
-                    placeholder={`Ej. Visitas presenciales · Asesor ${i + 1}…`}
-                  />
-                  <TextField
-                    value={cal.hours}
-                    onChange={(v) => {
-                      const next = [...d.calendars];
-                      next[i] = { ...next[i], hours: v };
-                      set("calendars", next);
-                    }}
-                    placeholder="Horario personalizado · Ej. Lun-Vie 10:00 a 18:00"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-
-    case 13:
-      return (
-        <div>
-          <StepHeader
-            number={13}
             title="Tus datos de contacto"
             subtitle="Para enviarte el acceso a tu prueba gratis y coordinar la activación."
           />
@@ -1297,11 +1301,11 @@ function renderStep(
         </div>
       );
 
-    case 14:
+    case 13:
       return (
         <div>
           <StepHeader
-            number={14}
+            number={13}
             title="Un detalle importante"
             subtitle="Antes de enviar, queremos ser transparentes sobre lo que cubre la prueba."
           />
