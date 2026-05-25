@@ -149,9 +149,30 @@
 
 ### Fase 7 — Dependencias
 
-`npm audit` reportó cero vulnerabilidades altas/críticas en el momento del audit
-(detalle al final del informe). Recomendaciones de actualizaciones menores: ver
-sección dedicada.
+Antes del audit: **5 high + 7 moderate = 12 vulnerabilidades**.
+Después: **0 high + 2 moderate**.
+
+Lo que se hizo:
+
+- `npm audit fix` (limpia `fast-uri`, `flatted`, `hono`, `@hono/node-server`,
+  `brace-expansion`, `ip-address`).
+- Bump de **Next.js 16.1.6 → 16.2.6** (y `eslint-config-next` en sincronía).
+  Cubre toda esta lista de avisos críticos:
+  - CSRF bypass via null origin (Server Actions y dev HMR websocket)
+  - Middleware/Proxy bypass en App Router
+  - Cache poisoning en RSC y en redirects de middleware
+  - HTTP request smuggling en rewrites
+  - DoS en Server Components y `next/image`
+  - XSS con nonces CSP en App Router
+
+Riesgo aceptado:
+
+- **`postcss`** (2 moderate, transitive de `next`). Único "fix" es
+  `npm audit fix --force` que regresa Next a 9.x. No es viable.
+  La vulnerabilidad (XSS por `</style>` mal escapado en CSS stringify) sólo
+  toca el pipeline de build de Tailwind/Next y no procesa input del usuario,
+  así que el riesgo real para nosotros es ~cero. Se revisará en la próxima
+  versión menor de Next.
 
 ### Fase 8 — Vercel + VPS + Supabase
 
