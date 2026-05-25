@@ -17,6 +17,25 @@ export default function AdminLoginPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    // Ask the server-side rate limiter first. If we've hammered the
+    // login from this IP, fail fast without burning a Supabase Auth call.
+    try {
+      const gate = await fetch("/api/admin/login-check", { method: "POST" });
+      if (gate.status === 429) {
+        const retry = gate.headers.get("Retry-After");
+        setError(
+          `Demasiados intentos. Espera ${
+            retry ? `${retry} segundos` : "unos minutos"
+          } y vuelve a intentar.`
+        );
+        setLoading(false);
+        return;
+      }
+    } catch {
+      // If the gate itself is unreachable we still try the login.
+    }
+
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.auth.signInWithPassword({
       email,
