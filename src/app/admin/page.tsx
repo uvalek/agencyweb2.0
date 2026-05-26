@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { AlertCircle, ArrowRight, LogOut, Mail, MessageSquare, Users } from "lucide-react";
+import { AlertCircle, ArrowRight, LogOut, Mail, MessageSquare, ShieldCheck, Users } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { signOut } from "./actions";
@@ -268,9 +268,15 @@ export default async function AdminDashboard() {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-brand-muted hidden sm:inline">
+            <span className="hidden text-sm text-brand-muted sm:inline">
               {user.email}
             </span>
+            <Link
+              href="/admin/security"
+              className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.02] px-4 py-2 text-sm text-brand-white transition-colors hover:bg-white/[0.05]"
+            >
+              <ShieldCheck className="h-4 w-4" /> Seguridad
+            </Link>
             <form action={signOut}>
               <button
                 type="submit"
