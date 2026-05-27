@@ -103,10 +103,19 @@ export async function POST(req: Request) {
     // Don't block — let the upstream model handle it, but flag it for review.
   }
 
+  // Shared secret with the chatbot VPS. When set, the upstream rejects
+  // any request that doesn't carry this header — so only this proxy can
+  // talk to it. Has to match WEBCHAT_API_KEY in EasyPanel.
+  const upstreamKey = process.env.WEBCHAT_API_KEY?.trim();
+  const upstreamHeaders: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (upstreamKey) upstreamHeaders["X-API-Key"] = upstreamKey;
+
   try {
     const res = await fetch(`${CHATBOT_URL}/api/webchat`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: upstreamHeaders,
       body: JSON.stringify(payload),
       // 30s gives the model plenty of room; anything longer is almost
       // certainly a stuck connection.
