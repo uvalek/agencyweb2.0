@@ -147,7 +147,20 @@ export default async function AdminDashboard() {
     const { data, error } = await supabase.auth.getUser();
     if (error) throw error;
     user = data.user;
+
+    // MFA enforcement: if the user enrolled a TOTP factor and the
+    // current session is still AAL1, send them through the challenge.
+    if (user) {
+      const { data: aal } =
+        await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (aal?.currentLevel === "aal1" && aal?.nextLevel === "aal2") {
+        redirect("/admin/mfa-challenge");
+      }
+    }
   } catch (e) {
+    // redirect() throws NEXT_REDIRECT — let it propagate.
+    if ((e as { digest?: string })?.digest?.startsWith?.("NEXT_REDIRECT"))
+      throw e;
     console.error("[admin] auth error", e);
     redirect("/admin/login");
   }
