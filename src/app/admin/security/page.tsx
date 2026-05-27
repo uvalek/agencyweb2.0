@@ -19,6 +19,16 @@ export default async function SecurityPage() {
   const adminEmail = process.env.ADMIN_EMAIL;
   if (adminEmail && user.email !== adminEmail) redirect("/admin/login");
 
+  // If the user has already enrolled and verified a TOTP factor but is
+  // still at AAL1, they must clear the challenge before they can touch
+  // this page (otherwise they could un-enroll without re-proving
+  // ownership of the second factor).
+  const { data: aal } =
+    await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (aal?.currentLevel === "aal1" && aal?.nextLevel === "aal2") {
+    redirect("/admin/mfa-challenge");
+  }
+
   const { data: factorsData } = await supabase.auth.mfa.listFactors();
   const verified =
     factorsData?.totp?.filter((f) => f.status === "verified") ?? [];

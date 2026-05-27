@@ -115,7 +115,16 @@ export default async function RequestDetail({
     const { data, error } = await supabase.auth.getUser();
     if (error) throw error;
     user = data.user;
+    if (user) {
+      const { data: aal } =
+        await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (aal?.currentLevel === "aal1" && aal?.nextLevel === "aal2") {
+        redirect("/admin/mfa-challenge");
+      }
+    }
   } catch (e) {
+    if ((e as { digest?: string })?.digest?.startsWith?.("NEXT_REDIRECT"))
+      throw e;
     console.error("[admin/detail] auth error", e);
     redirect("/admin/login");
   }
