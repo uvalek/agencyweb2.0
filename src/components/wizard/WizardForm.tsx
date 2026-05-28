@@ -14,6 +14,7 @@ import {
   Sparkles,
   Upload,
 } from "lucide-react";
+import TurnstileWidget from "@/components/TurnstileWidget";
 
 /* -------------------------------------------------------------------------- */
 /*  Types & constants                                                         */
@@ -80,6 +81,9 @@ type FormData = {
 
   // Terms
   acceptTerms: boolean;
+
+  // Cloudflare Turnstile
+  turnstileToken: string;
 };
 
 const INITIAL: FormData = {
@@ -121,6 +125,7 @@ const INITIAL: FormData = {
   preferredContact: "",
   manychatStatus: "",
   acceptTerms: false,
+  turnstileToken: "",
 };
 
 const PLATFORMS = [
@@ -608,7 +613,13 @@ export default function WizardForm() {
       case 13:
         return data.manychatStatus !== "";
       case 14:
-        return data.acceptTerms;
+        // Turnstile is only required when the site key is configured
+        // (production). Locally / in dev it is skipped automatically.
+        return (
+          data.acceptTerms &&
+          (!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
+            data.turnstileToken.length > 0)
+        );
       default:
         return true;
     }
@@ -1650,6 +1661,17 @@ function renderStep(
               independientes según el volumen de mensajes.
             </span>
           </label>
+
+          {/* Cloudflare Turnstile (bot check) */}
+          <div className="mt-6 flex flex-col items-center gap-2">
+            <TurnstileWidget
+              onVerify={(token) => set("turnstileToken", token)}
+              onExpire={() => set("turnstileToken", "")}
+            />
+            <p className="text-center text-[11px] text-brand-muted/70">
+              Verificación anti-spam de Cloudflare. No nos guarda nada.
+            </p>
+          </div>
         </div>
       );
 

@@ -5,23 +5,33 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Loader2, LogIn } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
+import TurnstileWidget from "@/components/TurnstileWidget";
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [captchaToken, setCaptchaToken] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const captchaRequired = Boolean(
+    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
+  );
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    // Ask the server-side rate limiter first. If we've hammered the
-    // login from this IP, fail fast without burning a Supabase Auth call.
+    // Rate-limit + captcha gate. The server checks Turnstile before
+    // letting the login attempt reach Supabase Auth.
     try {
-      const gate = await fetch("/api/admin/login-check", { method: "POST" });
+      const gate = await fetch("/api/admin/login-check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ captchaToken }),
+      });
       if (gate.status === 429) {
         const retry = gate.headers.get("Retry-After");
         setError(
@@ -29,6 +39,11 @@ export default function AdminLoginPage() {
             retry ? `${retry} segundos` : "unos minutos"
           } y vuelve a intentar.`
         );
+        setLoading(false);
+        return;
+      }
+      if (gate.status === 400) {
+        setError("Verificación anti-bot fallida. Recarga e inténtalo otra vez.");
         setLoading(false);
         return;
       }
@@ -105,9 +120,17 @@ export default function AdminLoginPage() {
               </div>
             )}
 
+            {/* Cloudflare Turnstile */}
+            <div className="flex justify-center pt-1">
+              <TurnstileWidget
+                onVerify={setCaptchaToken}
+                onExpire={() => setCaptchaToken("")}
+              />
+            </div>
+
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || (captchaRequired && !captchaToken)}
               className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-br from-purple-600 to-purple-400 px-6 py-3 text-sm font-semibold text-white shadow-[0_0_30px_rgba(124,58,237,0.35)] transition-all hover:shadow-[0_0_40px_rgba(124,58,237,0.5)] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? (

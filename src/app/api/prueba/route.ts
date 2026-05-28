@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
-import { enforceRateLimit } from "@/lib/rate-limit";
+import { enforceRateLimit, getClientIp } from "@/lib/rate-limit";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 export const runtime = "nodejs";
 
@@ -164,6 +165,18 @@ export async function POST(req: Request) {
     fd = await req.formData();
   } catch {
     return NextResponse.json({ ok: false, error: "bad_request" }, { status: 400 });
+  }
+
+  // Cloudflare Turnstile verification. If TURNSTILE_SECRET_KEY isn't set
+  // in the environment, `verifyTurnstile` returns true so the wizard
+  // keeps working in development.
+  const turnstileToken = parseJSON<string>(fd, "turnstileToken") ?? "";
+  const turnstileOk = await verifyTurnstile(turnstileToken, getClientIp(req));
+  if (!turnstileOk) {
+    return NextResponse.json(
+      { ok: false, error: "captcha_failed" },
+      { status: 400 }
+    );
   }
 
   // Reassemble the JSON-encoded fields submitted by the wizard.

@@ -14,13 +14,13 @@ const SUPABASE_HOST = "https://*.supabase.co";
 
 const CSP = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://connect.facebook.net https://*.facebook.com`,
+  `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://connect.facebook.net https://*.facebook.com https://challenges.cloudflare.com`,
   `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`,
   `font-src 'self' https://fonts.gstatic.com data:`,
   `img-src 'self' data: blob: https: ${SUPABASE_HOST} https://www.facebook.com`,
   `media-src 'self' blob: ${SUPABASE_HOST}`,
-  `connect-src 'self' ${SUPABASE_HOST} wss://*.supabase.co https://www.facebook.com`,
-  `frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com`,
+  `connect-src 'self' ${SUPABASE_HOST} wss://*.supabase.co https://www.facebook.com https://challenges.cloudflare.com`,
+  `frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://challenges.cloudflare.com`,
   `frame-ancestors 'none'`,
   `base-uri 'self'`,
   `form-action 'self'`,
