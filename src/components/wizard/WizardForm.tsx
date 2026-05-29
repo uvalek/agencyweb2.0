@@ -536,6 +536,7 @@ export default function WizardForm() {
   const [data, setData] = useState<FormData>(INITIAL);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const set = <K extends keyof FormData>(k: K, v: FormData[K]) =>
     setData((d) => ({ ...d, [k]: v }));
@@ -636,6 +637,7 @@ export default function WizardForm() {
 
   const submit = useCallback(async () => {
     setSubmitting(true);
+    setSubmitError(null);
     try {
       const fd = new FormData();
       for (const [k, v] of Object.entries(data)) {
@@ -645,14 +647,34 @@ export default function WizardForm() {
           fd.append(k, JSON.stringify(v));
         }
       }
-      await fetch("/api/prueba", { method: "POST", body: fd });
+      const res = await fetch("/api/prueba", { method: "POST", body: fd });
+      if (!res.ok) {
+        const err = (await res.json().catch(() => null)) as
+          | { error?: string }
+          | null;
+        if (err?.error === "captcha_failed") {
+          // Token likely expired between solving and submitting. Clear it
+          // so the user re-checks the box, then retries.
+          set("turnstileToken", "");
+          setSubmitError(
+            "La verificación anti-spam expiró. Vuelve a marcar la casilla y envía de nuevo."
+          );
+        } else {
+          setSubmitError(
+            "No pudimos enviar tu solicitud. Revisa tu conexión e inténtalo de nuevo."
+          );
+        }
+        return;
+      }
+      setSubmitted(true);
     } catch {
-      // ignore — we still show success
+      setSubmitError(
+        "No pudimos enviar tu solicitud. Revisa tu conexión e inténtalo de nuevo."
+      );
     } finally {
       setSubmitting(false);
-      setSubmitted(true);
     }
-  }, [data]);
+  }, [data, set]);
 
   // Keyboard: Enter advances on most steps; Esc goes back
   useEffect(() => {
@@ -734,6 +756,11 @@ export default function WizardForm() {
           paddingBottom: "calc(1rem + env(safe-area-inset-bottom, 0px))",
         }}
       >
+        {submitError && (
+          <div className="mx-auto mb-3 max-w-2xl rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-2.5 text-center text-sm text-red-200">
+            {submitError}
+          </div>
+        )}
         <div className="mx-auto flex max-w-2xl items-center justify-between gap-3">
           <button
             type="button"
