@@ -86,6 +86,10 @@ type FormData = {
   turnstileToken: string;
 };
 
+// Mirror of the server-side email check so the wizard blocks invalid
+// addresses before submit instead of failing validation server-side.
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const INITIAL: FormData = {
   companyName: "",
   teamSize: "",
@@ -608,7 +612,7 @@ export default function WizardForm() {
         return Boolean(
           data.contactName.trim() &&
             data.role &&
-            data.email.trim() &&
+            EMAIL_RE.test(data.email.trim()) &&
             data.preferredContact
         );
       case 13:
@@ -650,7 +654,7 @@ export default function WizardForm() {
       const res = await fetch("/api/prueba", { method: "POST", body: fd });
       if (!res.ok) {
         const err = (await res.json().catch(() => null)) as
-          | { error?: string }
+          | { error?: string; fields?: string[] }
           | null;
         if (err?.error === "captcha_failed") {
           // Token likely expired between solving and submitting. Clear it
@@ -658,6 +662,10 @@ export default function WizardForm() {
           set("turnstileToken", "");
           setSubmitError(
             "La verificación anti-spam expiró. Vuelve a marcar la casilla y envía de nuevo."
+          );
+        } else if (err?.error === "invalid_input" && err.fields?.length) {
+          setSubmitError(
+            `Revisa estos datos antes de enviar: ${err.fields.join(", ")}.`
           );
         } else {
           setSubmitError(

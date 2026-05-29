@@ -215,9 +215,10 @@ export async function POST(req: Request) {
 
   const parsed = submissionSchema.safeParse(raw);
   if (!parsed.success) {
-    console.error("[prueba] validation failed", parsed.error.flatten());
+    const fieldErrors = parsed.error.flatten().fieldErrors;
+    console.error("[prueba] validation failed", fieldErrors);
     return NextResponse.json(
-      { ok: false, error: "invalid_input" },
+      { ok: false, error: "invalid_input", fields: Object.keys(fieldErrors) },
       { status: 400 }
     );
   }
