@@ -25,7 +25,10 @@ export default function AdminLoginPage() {
     setError(null);
 
     // Rate-limit + captcha gate. The server checks Turnstile before
-    // letting the login attempt reach Supabase Auth.
+    // letting the login attempt reach Supabase Auth. This gate is
+    // FAIL-CLOSED: if it doesn't return an explicit { ok: true }, we
+    // refuse to proceed to Supabase. Otherwise a bot could bypass the
+    // captcha simply by making the gate request fail.
     try {
       const gate = await fetch("/api/admin/login-check", {
         method: "POST",
@@ -44,11 +47,30 @@ export default function AdminLoginPage() {
       }
       if (gate.status === 400) {
         setError("Verificación anti-bot fallida. Recarga e inténtalo otra vez.");
+        setCaptchaToken("");
+        setLoading(false);
+        return;
+      }
+      const result = (await gate.json().catch(() => null)) as
+        | { ok?: boolean }
+        | null;
+      if (!gate.ok || result?.ok !== true) {
+        setError(
+          "No pudimos validar la verificación de seguridad. Recarga la página e inténtalo otra vez."
+        );
+        setCaptchaToken("");
         setLoading(false);
         return;
       }
     } catch {
-      // If the gate itself is unreachable we still try the login.
+      // FAIL-CLOSED: if the gate is unreachable we do NOT fall through
+      // to Supabase. Better to block a legitimate login than to let a
+      // bot bypass the captcha by knocking the gate offline.
+      setError(
+        "No pudimos contactar el servidor de seguridad. Revisa tu conexión e inténtalo de nuevo."
+      );
+      setLoading(false);
+      return;
     }
 
     const supabase = createSupabaseBrowserClient();
