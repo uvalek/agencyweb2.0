@@ -156,8 +156,10 @@ export default async function RequestDetail({
       .createSignedUrl(path, 60 * 60);
     return data?.signedUrl ?? null;
   }
-  const dbUrl = await sign(r.db_file_path);
-  const faqUrl = await sign(r.faq_file_path);
+  const [dbUrl, faqUrl] = await Promise.all([
+    sign(r.db_file_path),
+    sign(r.faq_file_path),
+  ]);
 
   const createdAt = new Date(r.created_at);
   const createdLabel = createdAt.toLocaleString("es-MX", {
