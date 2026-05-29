@@ -35,6 +35,18 @@ export default function TurnstileWidget({
   const widgetIdRef = useRef<string | null>(null);
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
+  // Keep the latest callbacks in refs so the render effect below can
+  // depend only on `siteKey`. Otherwise the effect re-runs on every
+  // parent render (e.g. every keystroke in the login form), which would
+  // remove and re-create the widget — causing the loading spinner to
+  // flash, the checkbox to reset, and the layout to bounce.
+  const onVerifyRef = useRef(onVerify);
+  const onExpireRef = useRef(onExpire);
+  useEffect(() => {
+    onVerifyRef.current = onVerify;
+    onExpireRef.current = onExpire;
+  });
+
   useEffect(() => {
     if (!siteKey || !containerRef.current) return;
 
@@ -53,9 +65,9 @@ export default function TurnstileWidget({
         sitekey: siteKey,
         theme: "dark",
         size: "normal",
-        callback: (token: string) => onVerify(token),
-        "expired-callback": () => onExpire?.(),
-        "error-callback": () => onExpire?.(),
+        callback: (token: string) => onVerifyRef.current(token),
+        "expired-callback": () => onExpireRef.current?.(),
+        "error-callback": () => onExpireRef.current?.(),
       });
     };
 
@@ -73,7 +85,7 @@ export default function TurnstileWidget({
         widgetIdRef.current = null;
       }
     };
-  }, [siteKey, onVerify, onExpire]);
+  }, [siteKey]);
 
   if (!siteKey) {
     // Misconfigured environment: don't render the checkbox so the form
