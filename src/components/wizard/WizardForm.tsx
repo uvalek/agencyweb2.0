@@ -9,7 +9,6 @@ import {
   Check,
   CircleAlert,
   CornerDownLeft,
-  Play,
   ShieldCheck,
   Sparkles,
   Upload,
@@ -370,22 +369,28 @@ function ExtLink({
   );
 }
 
-function VideoPlaceholder({ label }: { label: string }) {
+function YouTubeEmbed({
+  id,
+  title,
+  start,
+}: {
+  id: string;
+  title: string;
+  start?: number;
+}) {
+  const src = `https://www.youtube-nocookie.com/embed/${id}${
+    start ? `?start=${start}` : ""
+  }`;
   return (
-    <div className="flex aspect-video w-full flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-purple-400/25 bg-white/[0.02] px-4 text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/15">
-        <Play
-          className="h-5 w-5 text-purple-300"
-          fill="currentColor"
-          strokeWidth={0}
-        />
-      </div>
-      <p className="text-xs text-brand-muted/80">
-        Video tutorial · <span className="text-brand-white/80">{label}</span>
-      </p>
-      <p className="text-[10px] uppercase tracking-wider text-brand-muted/50">
-        Próximamente
-      </p>
+    <div className="aspect-video w-full overflow-hidden rounded-xl border border-white/[0.08] bg-black">
+      <iframe
+        src={src}
+        title={title}
+        className="h-full w-full"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+        loading="lazy"
+      />
     </div>
   );
 }
@@ -1619,13 +1624,27 @@ function renderStep(
                     }
                   />
                 </div>
-                <VideoPlaceholder
-                  label={
-                    d.manychatStatus === "yes"
-                      ? "Cómo darme acceso a tu ManyChat"
-                      : "Crear cuenta de ManyChat y darme acceso"
-                  }
-                />
+                <div>
+                  <YouTubeEmbed
+                    id="XlatDKw0dp0"
+                    title={
+                      d.manychatStatus === "yes"
+                        ? "Cómo darme acceso a tu ManyChat"
+                        : "Crear cuenta de ManyChat y darme acceso"
+                    }
+                  />
+                  {d.manychatStatus === "yes" && (
+                    <p className="mt-3 flex gap-2 rounded-lg border border-purple-400/20 bg-purple-500/5 px-3 py-2 text-xs text-brand-muted">
+                      <Sparkles className="h-4 w-4 shrink-0 text-purple-300" />
+                      <span>
+                        En el{" "}
+                        <strong className="text-brand-white">minuto 2:38</strong>{" "}
+                        está la explicación de cómo agregar mi correo a tu cuenta
+                        de ManyChat.
+                      </span>
+                    </p>
+                  )}
+                </div>
               </motion.div>
             )}
           </section>
@@ -1641,7 +1660,10 @@ function renderStep(
 
             <div className="mt-6 grid gap-6 md:grid-cols-2">
               <NumberedSteps steps={OpenAISteps} />
-              <VideoPlaceholder label="Crear cuenta de OpenAI y darme acceso" />
+              <YouTubeEmbed
+                id="gWZhLsoeJ4A"
+                title="Crea tu proyecto y dame acceso"
+              />
             </div>
           </section>
 
