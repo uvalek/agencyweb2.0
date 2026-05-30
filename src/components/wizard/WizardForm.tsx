@@ -399,14 +399,20 @@ function YouTubeEmbed({
 // OpenAI API cost estimate (GPT-4.1 mini)
 // ---------------------------------------------------------------------------
 //
-// Estimate derived from a representative real-estate lead conversation
-// (~13 client messages, all the way to booking a visit). Each bot reply
-// re-sends the system prompt (~1,500 tokens) plus the growing history, so
-// a full conversation consumes ~15,000 input + ~550 output tokens.
-//   input : 15,000 × $0.40 / 1M = $0.0060
-//   output:    550 × $1.60 / 1M = $0.00088
-//   total ≈ $0.0069 per conversation ≈ $0.0006 per client message.
-const OPENAI_COST_PER_MESSAGE_USD = 0.0006;
+// The chatbot is a multi-agent system: a Router (~1,210 tok) classifies
+// every client message and hands it to a specialized agent — FAQ (~3,690),
+// Catálogo (~2,470), Agendamiento (~2,900) or Seguimiento (~920) — and each
+// call re-sends its own system prompt plus the growing history. So one
+// client message triggers ~2 model calls, not one.
+//
+// Representative lead conversation (~13 client messages, ~7 bot turns, up to
+// booking a visit; Catálogo + Agendamiento dominate, ~2,900 tok avg agent):
+//   system : 7 × (1,210 router + 2,900 agent) ≈ 28,800 tok
+//   history: re-sent on router + agent calls   ≈  3,900 tok
+//   input  ≈ 32,000 × $0.40 / 1M               =  $0.0128
+//   output ≈    650 × $1.60 / 1M               =  $0.0010
+//   total  ≈ $0.014 per conversation ≈ $0.0011 per client message.
+const OPENAI_COST_PER_MESSAGE_USD = 0.0011;
 
 const MONTHLY_COST_RANGES: {
   id: string;
@@ -504,11 +510,13 @@ function OpenAICostEstimate({ monthly }: { monthly: string }) {
       </div>
 
       <p className="mt-3 text-[10px] leading-relaxed text-brand-muted/70">
-        Estimación basada en una conversación promedio (~13 mensajes del
-        cliente, hasta agendar una visita): ~15,000 tokens de entrada + ~550 de
-        salida ≈ $0.007 USD por conversación. Precios GPT-4.1 mini: $0.40
-        (entrada) y $1.60 (salida) por millón de tokens. El costo real varía
-        según la duración de cada conversación. OpenAI factura en USD.
+        Estimación para un sistema multi-agente (un router clasifica cada
+        mensaje y lo envía al agente especializado —FAQ, catálogo, agendamiento
+        o seguimiento—, y cada llamada reenvía su system prompt + el historial).
+        Una conversación promedio hasta agendar (~13 mensajes) consume ~32,000
+        tokens de entrada + ~650 de salida ≈ $0.014 USD. Precios GPT-4.1 mini:
+        $0.40 (entrada) y $1.60 (salida) por millón de tokens. El costo real
+        varía según la duración de cada conversación. OpenAI factura en USD.
       </p>
     </div>
   );
