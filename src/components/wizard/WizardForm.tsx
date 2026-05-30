@@ -395,6 +395,125 @@ function YouTubeEmbed({
   );
 }
 
+// ---------------------------------------------------------------------------
+// OpenAI API cost estimate (GPT-4.1 mini)
+// ---------------------------------------------------------------------------
+//
+// Estimate derived from a representative real-estate lead conversation
+// (~13 client messages, all the way to booking a visit). Each bot reply
+// re-sends the system prompt (~1,500 tokens) plus the growing history, so
+// a full conversation consumes ~15,000 input + ~550 output tokens.
+//   input : 15,000 × $0.40 / 1M = $0.0060
+//   output:    550 × $1.60 / 1M = $0.00088
+//   total ≈ $0.0069 per conversation ≈ $0.0006 per client message.
+const OPENAI_COST_PER_MESSAGE_USD = 0.0006;
+
+const MONTHLY_COST_RANGES: {
+  id: string;
+  label: string;
+  min: number;
+  max: number | null;
+}[] = [
+  { id: "<500", label: "Menos de 500", min: 0, max: 500 },
+  { id: "500-1500", label: "500 — 1,500", min: 500, max: 1500 },
+  { id: "1500-3000", label: "1,500 — 3,000", min: 1500, max: 3000 },
+  { id: "3000-4500", label: "3,000 — 4,500", min: 3000, max: 4500 },
+  { id: "4500-7000", label: "4,500 — 7,000", min: 4500, max: 7000 },
+  { id: "7000-9000", label: "7,000 — 9,000", min: 7000, max: 9000 },
+  { id: "9000-15000", label: "9,000 — 15,000", min: 9000, max: 15000 },
+  { id: "15000-21000", label: "15,000 — 21,000", min: 15000, max: 21000 },
+  { id: "21000-30000", label: "21,000 — 30,000", min: 21000, max: 30000 },
+  { id: "30000+", label: "Más de 30,000", min: 30000, max: null },
+];
+
+function fmtUsd(n: number) {
+  return `$${n.toFixed(2)}`;
+}
+
+function OpenAICostEstimate({ monthly }: { monthly: string }) {
+  const rate = OPENAI_COST_PER_MESSAGE_USD;
+  const selected = MONTHLY_COST_RANGES.find((r) => r.id === monthly);
+
+  return (
+    <div className="mt-6 rounded-xl border border-white/[0.08] bg-white/[0.02] p-4 sm:p-5">
+      <h4 className="font-heading text-base font-bold text-brand-white">
+        Costo estimado de la API de OpenAI
+      </h4>
+      <p className="mt-1 text-xs leading-relaxed text-brand-muted">
+        Usamos <strong className="text-brand-white">GPT-4.1 mini</strong>, el
+        modelo más económico para chatbots. Esto es lo que pagarías
+        directamente a OpenAI (aparte de tu prueba gratis), según el volumen
+        que indicaste.
+      </p>
+
+      {selected && (
+        <div className="mt-4 rounded-lg border border-purple-400/25 bg-purple-500/10 p-3">
+          <p className="text-xs text-brand-muted">
+            Para tu volumen ({selected.label} mensajes/mes):
+          </p>
+          <p className="mt-1 font-heading text-xl font-bold text-brand-white">
+            {selected.max === null
+              ? `desde ${fmtUsd(selected.min * rate)} USD / mes`
+              : `~ ${fmtUsd(selected.min * rate)} – ${fmtUsd(
+                  selected.max * rate
+                )} USD / mes`}
+          </p>
+        </div>
+      )}
+
+      <div className="mt-4 overflow-hidden rounded-lg border border-white/[0.06]">
+        <table className="w-full border-collapse text-left text-xs">
+          <thead className="bg-white/[0.03] text-brand-muted">
+            <tr>
+              <th className="px-3 py-2 font-medium">Mensajes / mes</th>
+              <th className="px-3 py-2 text-right font-medium">
+                Costo estimado (USD)
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {MONTHLY_COST_RANGES.map((r) => {
+              const isSel = r.id === monthly;
+              const cost =
+                r.max === null
+                  ? `desde ${fmtUsd(r.min * rate)}`
+                  : `${fmtUsd(r.min * rate)} – ${fmtUsd(r.max * rate)}`;
+              return (
+                <tr
+                  key={r.id}
+                  className={
+                    isSel
+                      ? "bg-purple-500/15 font-semibold text-brand-white"
+                      : "text-brand-muted"
+                  }
+                >
+                  <td className="border-t border-white/[0.06] px-3 py-2">
+                    {r.label}
+                    {isSel && (
+                      <span className="ml-1 text-purple-300">← tú</span>
+                    )}
+                  </td>
+                  <td className="border-t border-white/[0.06] px-3 py-2 text-right">
+                    {cost}/mes
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      <p className="mt-3 text-[10px] leading-relaxed text-brand-muted/70">
+        Estimación basada en una conversación promedio (~13 mensajes del
+        cliente, hasta agendar una visita): ~15,000 tokens de entrada + ~550 de
+        salida ≈ $0.007 USD por conversación. Precios GPT-4.1 mini: $0.40
+        (entrada) y $1.60 (salida) por millón de tokens. El costo real varía
+        según la duración de cada conversación. OpenAI factura en USD.
+      </p>
+    </div>
+  );
+}
+
 function NumberedSteps({ steps }: { steps: React.ReactNode[] }) {
   return (
     <ol className="space-y-3">
@@ -1665,6 +1784,8 @@ function renderStep(
                 title="Crea tu proyecto y dame acceso"
               />
             </div>
+
+            <OpenAICostEstimate monthly={d.monthlyMessages} />
           </section>
 
           <div className="mt-5 flex gap-3 rounded-xl border border-purple-400/20 bg-purple-500/5 p-4 text-sm text-brand-muted">
