@@ -7,6 +7,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
+  ChevronDown,
   CircleAlert,
   CornerDownLeft,
   ShieldCheck,
@@ -727,6 +728,7 @@ export default function WizardForm() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [showScrollHint, setShowScrollHint] = useState(false);
 
   const set = <K extends keyof FormData>(k: K, v: FormData[K]) =>
     setData((d) => ({ ...d, [k]: v }));
@@ -892,6 +894,38 @@ export default function WizardForm() {
     return () => window.removeEventListener("keydown", onKey);
   }, [back, canContinue, next, step, submit, submitting]);
 
+  // On every step change, jump back to the top so the user always starts at
+  // the beginning of the new step instead of mid-scroll from the last one.
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [step]);
+
+  // Show a "hay más abajo" hint whenever the current step has content below
+  // the fold, so users don't hit "Continuar" without seeing every field.
+  // A ResizeObserver catches conditional sections that expand the page.
+  useEffect(() => {
+    const FOOTER_AND_GAP = 150;
+    const check = () => {
+      const remaining =
+        document.documentElement.scrollHeight -
+        (window.scrollY + window.innerHeight);
+      setShowScrollHint(remaining > FOOTER_AND_GAP);
+    };
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+    window.addEventListener("resize", check);
+    const ro = new ResizeObserver(check);
+    ro.observe(document.body);
+    // Re-check once the step transition animation settles.
+    const t = window.setTimeout(check, 350);
+    return () => {
+      window.removeEventListener("scroll", check);
+      window.removeEventListener("resize", check);
+      ro.disconnect();
+      window.clearTimeout(t);
+    };
+  }, [step]);
+
   if (submitted) return <ThankYou name={data.contactName} />;
 
   return (
@@ -942,6 +976,30 @@ export default function WizardForm() {
           </AnimatePresence>
         </div>
       </main>
+
+      {/* "More below" hint — appears when the step overflows the viewport */}
+      <AnimatePresence>
+        {showScrollHint && (
+          <motion.button
+            type="button"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.2 }}
+            onClick={() =>
+              window.scrollBy({
+                top: window.innerHeight * 0.7,
+                behavior: "smooth",
+              })
+            }
+            className="fixed left-1/2 z-30 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-purple-400/40 bg-[#0a0a0a]/90 px-4 py-1.5 text-xs font-medium text-purple-100 shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md"
+            style={{ bottom: "calc(6.25rem + env(safe-area-inset-bottom, 0px))" }}
+          >
+            Faltan campos abajo · desliza
+            <ChevronDown className="h-3.5 w-3.5 animate-bounce" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Footer nav */}
       <footer
