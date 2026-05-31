@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -626,6 +626,129 @@ function TextField({
       autoFocus={autoFocus}
       className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3.5 text-lg text-brand-white placeholder:text-brand-muted/60 outline-none transition-colors focus:border-purple-400/50 focus:bg-white/[0.05]"
     />
+  );
+}
+
+// Country dial codes for the WhatsApp field. Mexico first (default).
+const PHONE_COUNTRIES: {
+  code: string;
+  dial: string;
+  name: string;
+  flag: string;
+}[] = [
+  { code: "MX", dial: "+52", name: "México", flag: "🇲🇽" },
+  { code: "US", dial: "+1", name: "Estados Unidos / Canadá", flag: "🇺🇸" },
+  { code: "CO", dial: "+57", name: "Colombia", flag: "🇨🇴" },
+  { code: "AR", dial: "+54", name: "Argentina", flag: "🇦🇷" },
+  { code: "CL", dial: "+56", name: "Chile", flag: "🇨🇱" },
+  { code: "PE", dial: "+51", name: "Perú", flag: "🇵🇪" },
+  { code: "BR", dial: "+55", name: "Brasil", flag: "🇧🇷" },
+  { code: "EC", dial: "+593", name: "Ecuador", flag: "🇪🇨" },
+  { code: "GT", dial: "+502", name: "Guatemala", flag: "🇬🇹" },
+  { code: "CR", dial: "+506", name: "Costa Rica", flag: "🇨🇷" },
+  { code: "PA", dial: "+507", name: "Panamá", flag: "🇵🇦" },
+  { code: "ES", dial: "+34", name: "España", flag: "🇪🇸" },
+];
+
+function PhoneField({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  // Parse the stored value back into a dial code + local part. Match the
+  // longest dial first so "+593" wins over "+5".
+  const parse = () => {
+    const v = (value || "").trim();
+    const byLength = [...PHONE_COUNTRIES].sort(
+      (a, b) => b.dial.length - a.dial.length
+    );
+    const match = byLength.find((c) => v.startsWith(c.dial));
+    if (match) return { dial: match.dial, local: v.slice(match.dial.length).trim() };
+    return { dial: "+52", local: v.replace(/^\+/, "") };
+  };
+
+  const [dial, setDial] = useState(() => parse().dial);
+  const [local, setLocal] = useState(() => parse().local);
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  // Store as "+<dial> <number>", or empty if no number typed (it's optional).
+  const emit = (d: string, l: string) => {
+    const cleaned = l.replace(/[^\d\s]/g, "").replace(/\s+/g, " ").trim();
+    onChange(cleaned ? `${d} ${cleaned}` : "");
+  };
+
+  const current =
+    PHONE_COUNTRIES.find((c) => c.dial === dial) ?? PHONE_COUNTRIES[0];
+
+  return (
+    <div ref={ref} className="relative flex gap-2">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-label="Cambiar país"
+        className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-3.5 text-brand-white outline-none transition-colors hover:border-white/20 focus:border-purple-400/50"
+      >
+        <span className="text-lg leading-none">{current.flag}</span>
+        <span className="text-base">{current.dial}</span>
+        <ChevronDown className="h-4 w-4 text-brand-muted" />
+      </button>
+
+      <input
+        type="tel"
+        inputMode="numeric"
+        value={local}
+        onChange={(e) => {
+          setLocal(e.target.value);
+          emit(dial, e.target.value);
+        }}
+        placeholder="246 195 7348"
+        className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3.5 text-lg text-brand-white placeholder:text-brand-muted/60 outline-none transition-colors focus:border-purple-400/50 focus:bg-white/[0.05]"
+      />
+
+      {open && (
+        <div className="absolute left-0 top-full z-30 mt-1.5 max-h-64 w-64 overflow-auto rounded-xl border border-white/[0.1] bg-[#0c0c0c] p-1 shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
+          {PHONE_COUNTRIES.map((c) => (
+            <button
+              key={c.code}
+              type="button"
+              onClick={() => {
+                setDial(c.dial);
+                setOpen(false);
+                emit(c.dial, local);
+              }}
+              className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                c.dial === dial
+                  ? "bg-purple-500/20 text-brand-white"
+                  : "text-brand-muted hover:bg-white/[0.05] hover:text-brand-white"
+              }`}
+            >
+              <span className="text-lg leading-none">{c.flag}</span>
+              <span className="flex-1">{c.name}</span>
+              <span className="text-xs text-brand-muted">{c.dial}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -1791,24 +1914,21 @@ function renderStep(
                 ))}
               </div>
             </div>
-            <div className="grid gap-5 sm:grid-cols-2">
-              <div>
-                <FieldLabel>Correo electrónico *</FieldLabel>
-                <TextField
-                  type="email"
-                  value={d.email}
-                  onChange={(v) => set("email", v)}
-                  placeholder="tu@correo.com"
-                />
-              </div>
-              <div>
-                <FieldLabel>WhatsApp (con código de país)</FieldLabel>
-                <TextField
-                  value={d.whatsapp}
-                  onChange={(v) => set("whatsapp", v)}
-                  placeholder="+52 246 195 7348"
-                />
-              </div>
+            <div>
+              <FieldLabel>Correo electrónico *</FieldLabel>
+              <TextField
+                type="email"
+                value={d.email}
+                onChange={(v) => set("email", v)}
+                placeholder="tu@correo.com"
+              />
+            </div>
+            <div>
+              <FieldLabel>WhatsApp</FieldLabel>
+              <PhoneField
+                value={d.whatsapp}
+                onChange={(v) => set("whatsapp", v)}
+              />
             </div>
             <div>
               <FieldLabel>¿Cómo prefieres que te contactemos? *</FieldLabel>
