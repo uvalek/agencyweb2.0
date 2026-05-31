@@ -701,18 +701,18 @@ function StepHeader({
   subtitle?: string;
 }) {
   return (
-    <div className="mb-8">
-      <div className="mb-3 flex items-center gap-2 text-purple-300/80">
+    <div className="mb-6">
+      <div className="mb-2 flex items-center gap-2 text-purple-300/80">
         <span className="font-heading text-sm font-bold tracking-wider">
           {String(number).padStart(2, "0")}
         </span>
         <ArrowRight className="h-3.5 w-3.5" />
       </div>
-      <h2 className="font-heading text-3xl font-bold leading-tight tracking-tight text-brand-white sm:text-4xl md:text-5xl">
+      <h2 className="font-heading text-2xl font-bold leading-tight tracking-tight text-brand-white sm:text-3xl md:text-4xl">
         {title}
       </h2>
       {subtitle && (
-        <p className="mt-4 text-base text-brand-muted sm:text-lg">{subtitle}</p>
+        <p className="mt-3 text-sm text-brand-muted sm:text-base">{subtitle}</p>
       )}
     </div>
   );
@@ -894,11 +894,19 @@ export default function WizardForm() {
     return () => window.removeEventListener("keydown", onKey);
   }, [back, canContinue, next, step, submit, submitting]);
 
+  // Jump to the very top instantly. We must pass behavior:"instant" because
+  // globals.css sets `html { scroll-behavior: smooth }`, and a smooth scroll
+  // gets cancelled the moment the step content swaps — which is why the page
+  // appeared to "stay" at the previous scroll position.
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+  }, []);
+
   // On every step change, jump back to the top so the user always starts at
   // the beginning of the new step instead of mid-scroll from the last one.
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }, [step]);
+    scrollToTop();
+  }, [step, scrollToTop]);
 
   // Show a "hay más abajo" hint whenever the current step has content below
   // the fold, so users don't hit "Continuar" without seeing every field.
@@ -939,13 +947,13 @@ export default function WizardForm() {
       </div>
 
       {/* Header */}
-      <header className="flex items-center justify-between px-5 py-5 sm:px-10">
+      <header className="flex items-center justify-between px-5 py-3 sm:px-10 sm:py-4">
         <Link href="/" className="cursor-pointer">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/Logo Monocromatico Blanco.svg"
             alt="AlekAgency"
-            className="h-12 w-auto sm:h-14"
+            className="h-10 w-auto sm:h-12"
           />
         </Link>
         <div className="font-heading text-sm font-medium text-brand-muted">
@@ -955,7 +963,7 @@ export default function WizardForm() {
 
       {/* Step content */}
       <main
-        className="flex flex-1 items-start justify-center px-5 pt-6 sm:items-start sm:px-10 sm:pt-12"
+        className="flex flex-1 items-start justify-center px-5 pt-2 sm:px-10 sm:pt-5"
         style={{
           paddingBottom: "calc(9rem + env(safe-area-inset-bottom, 0px))",
         }}
@@ -963,7 +971,7 @@ export default function WizardForm() {
         <div
           className={`w-full ${step === 13 ? "max-w-4xl" : "max-w-2xl"}`}
         >
-          <AnimatePresence mode="wait" initial={false}>
+          <AnimatePresence mode="wait" initial={false} onExitComplete={scrollToTop}>
             <motion.div
               key={step}
               initial={{ opacity: 0, x: 40 }}
@@ -976,6 +984,15 @@ export default function WizardForm() {
           </AnimatePresence>
         </div>
       </main>
+
+      {/* Bottom fade — hints that the content continues below the fold */}
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none fixed left-0 right-0 z-20 h-24 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent transition-opacity duration-300 ${
+          showScrollHint ? "opacity-100" : "opacity-0"
+        }`}
+        style={{ bottom: "calc(5rem + env(safe-area-inset-bottom, 0px))" }}
+      />
 
       {/* "More below" hint — appears when the step overflows the viewport */}
       <AnimatePresence>
@@ -1170,21 +1187,23 @@ function renderStep(
                 ))}
               </div>
             </div>
-            <div>
-              <FieldLabel>Ubicación / Zona donde operan</FieldLabel>
-              <TextField
-                value={d.location}
-                onChange={(v) => set("location", v)}
-                placeholder="Ej. CDMX, Polanco y zonas aledañas"
-              />
-            </div>
-            <div>
-              <FieldLabel>Sitio web (si lo tienes)</FieldLabel>
-              <TextField
-                value={d.websiteUrl}
-                onChange={(v) => set("websiteUrl", v)}
-                placeholder="https://tuinmobiliaria.com"
-              />
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <FieldLabel>Ubicación / Zona donde operan</FieldLabel>
+                <TextField
+                  value={d.location}
+                  onChange={(v) => set("location", v)}
+                  placeholder="Ej. CDMX, Polanco"
+                />
+              </div>
+              <div>
+                <FieldLabel>Sitio web (si lo tienes)</FieldLabel>
+                <TextField
+                  value={d.websiteUrl}
+                  onChange={(v) => set("websiteUrl", v)}
+                  placeholder="https://tuinmobiliaria.com"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -1772,22 +1791,24 @@ function renderStep(
                 ))}
               </div>
             </div>
-            <div>
-              <FieldLabel>Correo electrónico *</FieldLabel>
-              <TextField
-                type="email"
-                value={d.email}
-                onChange={(v) => set("email", v)}
-                placeholder="tu@correo.com"
-              />
-            </div>
-            <div>
-              <FieldLabel>WhatsApp (con código de país)</FieldLabel>
-              <TextField
-                value={d.whatsapp}
-                onChange={(v) => set("whatsapp", v)}
-                placeholder="+52 246 195 7348"
-              />
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <FieldLabel>Correo electrónico *</FieldLabel>
+                <TextField
+                  type="email"
+                  value={d.email}
+                  onChange={(v) => set("email", v)}
+                  placeholder="tu@correo.com"
+                />
+              </div>
+              <div>
+                <FieldLabel>WhatsApp (con código de país)</FieldLabel>
+                <TextField
+                  value={d.whatsapp}
+                  onChange={(v) => set("whatsapp", v)}
+                  placeholder="+52 246 195 7348"
+                />
+              </div>
             </div>
             <div>
               <FieldLabel>¿Cómo prefieres que te contactemos? *</FieldLabel>
