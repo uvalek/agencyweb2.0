@@ -396,7 +396,7 @@ function YouTubeEmbed({
 }
 
 // ---------------------------------------------------------------------------
-// OpenAI API cost estimate (GPT-4.1 mini)
+// OpenAI API cost estimate
 // ---------------------------------------------------------------------------
 //
 // The chatbot is a multi-agent system: a Router (~1,210 tok) classifies
@@ -409,10 +409,31 @@ function YouTubeEmbed({
 // booking a visit; Catálogo + Agendamiento dominate, ~2,900 tok avg agent):
 //   system : 7 × (1,210 router + 2,900 agent) ≈ 28,800 tok
 //   history: re-sent on router + agent calls   ≈  3,900 tok
-//   input  ≈ 32,000 × $0.40 / 1M               =  $0.0128
-//   output ≈    650 × $1.60 / 1M               =  $0.0010
-//   total  ≈ $0.014 per conversation ≈ $0.0011 per client message.
-const OPENAI_COST_PER_MESSAGE_USD = 0.0011;
+//   total  ≈ 32,000 input + 650 output tokens per conversation.
+const COST_INPUT_TOKENS_PER_CONVO = 32_000;
+const COST_OUTPUT_TOKENS_PER_CONVO = 650;
+const COST_MESSAGES_PER_CONVO = 13;
+
+type CostModelId = "nano" | "mini";
+
+const COST_MODELS: {
+  id: CostModelId;
+  label: string;
+  inputPrice: number; // USD per 1M input tokens
+  outputPrice: number; // USD per 1M output tokens
+}[] = [
+  { id: "nano", label: "GPT-5.4 nano", inputPrice: 0.2, outputPrice: 1.25 },
+  { id: "mini", label: "GPT-5.4 mini", inputPrice: 0.75, outputPrice: 4.5 },
+];
+
+// Average USD cost of a single client message under a given model.
+function perMessageUsd(m: { inputPrice: number; outputPrice: number }) {
+  const convo =
+    (COST_INPUT_TOKENS_PER_CONVO * m.inputPrice +
+      COST_OUTPUT_TOKENS_PER_CONVO * m.outputPrice) /
+    1_000_000;
+  return convo / COST_MESSAGES_PER_CONVO;
+}
 
 const MONTHLY_COST_RANGES: {
   id: string;
@@ -437,7 +458,9 @@ function fmtUsd(n: number) {
 }
 
 function OpenAICostEstimate({ monthly }: { monthly: string }) {
-  const rate = OPENAI_COST_PER_MESSAGE_USD;
+  const [modelId, setModelId] = useState<CostModelId>("nano");
+  const model = COST_MODELS.find((m) => m.id === modelId) ?? COST_MODELS[0];
+  const rate = perMessageUsd(model);
   const selected = MONTHLY_COST_RANGES.find((r) => r.id === monthly);
 
   return (
@@ -446,16 +469,33 @@ function OpenAICostEstimate({ monthly }: { monthly: string }) {
         Costo estimado de la API de OpenAI
       </h4>
       <p className="mt-1 text-xs leading-relaxed text-brand-muted">
-        Usamos <strong className="text-brand-white">GPT-4.1 mini</strong>, el
-        modelo más económico para chatbots. Esto es lo que pagarías
-        directamente a OpenAI (aparte de tu prueba gratis), según el volumen
-        que indicaste.
+        Esto es lo que pagarías directamente a OpenAI (aparte de tu prueba
+        gratis), según el volumen que indicaste. Elige el modelo para comparar:
       </p>
+
+      {/* Model selector */}
+      <div className="mt-3 inline-flex rounded-lg border border-white/[0.08] bg-white/[0.02] p-1">
+        {COST_MODELS.map((m) => (
+          <button
+            key={m.id}
+            type="button"
+            onClick={() => setModelId(m.id)}
+            className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
+              m.id === modelId
+                ? "bg-purple-500/25 text-brand-white"
+                : "text-brand-muted hover:text-brand-white"
+            }`}
+          >
+            {m.label}
+          </button>
+        ))}
+      </div>
 
       {selected && (
         <div className="mt-4 rounded-lg border border-purple-400/25 bg-purple-500/10 p-3">
           <p className="text-xs text-brand-muted">
-            Para tu volumen ({selected.label} mensajes/mes):
+            Para tu volumen ({selected.label} mensajes/mes) con{" "}
+            <strong className="text-brand-white">{model.label}</strong>:
           </p>
           <p className="mt-1 font-heading text-xl font-bold text-brand-white">
             {selected.max === null
@@ -509,13 +549,27 @@ function OpenAICostEstimate({ monthly }: { monthly: string }) {
         </table>
       </div>
 
+      {/* nano vs mini note */}
+      <div className="mt-3 flex gap-2 rounded-lg border border-purple-400/20 bg-purple-500/5 px-3 py-2 text-[11px] leading-relaxed text-brand-muted">
+        <Sparkles className="h-4 w-4 shrink-0 text-purple-300" />
+        <span>
+          <strong className="text-brand-white">GPT-5.4 nano</strong> es el más
+          rápido y económico, ideal para respuestas sencillas.{" "}
+          <strong className="text-brand-white">GPT-5.4 mini</strong> cuesta más,
+          pero entiende mejor instrucciones complejas, comete menos errores al
+          agendar y maneja mejor preguntas ambiguas o fuera de guion. Para la
+          mayoría de inmobiliarias, nano es más que suficiente.
+        </span>
+      </div>
+
       <p className="mt-3 text-[10px] leading-relaxed text-brand-muted/70">
         Estimación para un sistema multi-agente (un router clasifica cada
         mensaje y lo envía al agente especializado —FAQ, catálogo, agendamiento
         o seguimiento—, y cada llamada reenvía su system prompt + el historial).
         Una conversación promedio hasta agendar (~13 mensajes) consume ~32,000
-        tokens de entrada + ~650 de salida ≈ $0.014 USD. Precios GPT-4.1 mini:
-        $0.40 (entrada) y $1.60 (salida) por millón de tokens. El costo real
+        tokens de entrada + ~650 de salida ≈ {fmtUsd(rate * COST_MESSAGES_PER_CONVO)}{" "}
+        USD con {model.label}. Precios: {fmtUsd(model.inputPrice)} (entrada) y{" "}
+        {fmtUsd(model.outputPrice)} (salida) por millón de tokens. El costo real
         varía según la duración de cada conversación. OpenAI factura en USD.
       </p>
     </div>
