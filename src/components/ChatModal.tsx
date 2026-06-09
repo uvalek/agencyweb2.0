@@ -88,7 +88,7 @@ function MessageContent({ text }: { text: string }) {
 // variable de entorno NEXT_PUBLIC_CHATBOT_URL en Vercel.
 const CHATBOT_URL =
   process.env.NEXT_PUBLIC_CHATBOT_URL ??
-  "https://megachatbot-chatbotmain.aslx54.easypanel.host";
+  "https://chatbotmainhetzner-chatbothetzner.3bmm1w.easypanel.host";
 
 const CHAT_ID_KEY = "alek_webchat_id";
 
