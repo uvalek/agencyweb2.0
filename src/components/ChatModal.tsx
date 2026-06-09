@@ -84,11 +84,10 @@ function MessageContent({ text }: { text: string }) {
   );
 }
 
-// URL del backend del chatbot (EasyPanel). Se puede sobreescribir con la
-// variable de entorno NEXT_PUBLIC_CHATBOT_URL en Vercel.
-const CHATBOT_URL =
-  process.env.NEXT_PUBLIC_CHATBOT_URL ??
-  "https://chatbotmainhetzner-chatbothetzner.3bmm1w.easypanel.host";
+// Same-origin proxy. The actual VPS URL lives only in the server env
+// (CHATBOT_URL) so it's never exposed to the browser bundle and we can
+// apply rate-limit + abuse detection on it.
+const CHAT_PROXY_URL = "/api/chat";
 
 const CHAT_ID_KEY = "alek_webchat_id";
 
@@ -189,7 +188,7 @@ export default function ChatModal({
     sendingRef.current = true;
     setSending(true);
     try {
-      const res = await fetch(`${CHATBOT_URL}/api/webchat`, {
+      const res = await fetch(CHAT_PROXY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ chat_id: chatIdRef.current, text }),
